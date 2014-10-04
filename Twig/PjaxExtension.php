@@ -26,7 +26,6 @@ class PjaxExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-
             'is_pjax' => new \Twig_Function_Method($this, 'isPjax', ['is_safe' => ['html']]),
         );
     }
