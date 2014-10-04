@@ -2,7 +2,7 @@
     "name": "strontium/pjax-bundle",
     "type": "symfony-bundle",
     "description": "Integration of defunkt/jquery-pjax into Symfony 2",
-    "keywords": ["pjax"],
+    "keywords": ["pjax", "Symfony"],
     "license": "MIT",
     "authors": [
         {
