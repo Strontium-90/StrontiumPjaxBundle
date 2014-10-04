@@ -25,8 +25,18 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->append(
                 (new NodeBuilder())
-                    ->node('driver', 'scalar')
+                    ->scalarNode('driver')
                     ->defaultValue('asd')
+            )
+            ->append(
+                (new NodeBuilder())
+                    ->booleanNode('add_version')
+                    ->defaultValue(false)
+            )
+            ->append(
+                (new NodeBuilder())
+                    ->scalarNode('version_generator')
+                    ->defaultValue('pjax.version_generator.auth_token')
             )
             ->end();
 
