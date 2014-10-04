@@ -1,0 +1,34 @@
+{
+    "name": "strontium/pjax-bundle",
+    "type": "symfony-bundle",
+    "description": "Integration of defunkt/jquery-pjax into Symfony 2",
+    "keywords": ["pjax"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bannov Aleksey",
+            "email": "a.s.bannov@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Strontium\\PjaxBundle\\": ""
+        }
+    },
+    "target-dir": "Mopa/Bundle/BootstrapBundle",
+    "require": {
+        "symfony/framework-bundle": "~2.3",
+        "symfony/twig-bundle": "~2.3"
+    },
+    "suggest":  {
+
+    },
+    "scripts": {
+
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1.0"
+        }
+    }
+}
