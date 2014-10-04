@@ -52,6 +52,9 @@ class PjaxExtension extends \Twig_Extension
         $htmlAttr = [];
 
         foreach ($attributes as $key => $value) {
+            if (is_bool($value)) {
+                $value = $value ? 'true' : 'false';
+            }
             $htmlAttr[] = sprintf('%s="%s"', $key, $value);
         }
 
@@ -91,7 +94,7 @@ class PjaxExtension extends \Twig_Extension
             $attributes['data-pjax-redirect-target'] = (string)$redirectTarget;
         }
         if ($redirectCloseModal) {
-            $attributes['data-pjax-redirect-close-modal'] = (bool)$redirectCloseModal;
+            $attributes['data-pjax-redirect-close-modal'] = $redirectCloseModal;
         }
 
         return $attributes;
