@@ -8,8 +8,7 @@ Installation
 ``` json
 {
     "require": {
-        "mopa/bootstrap-bundle": "v3.0.0-beta4",
-        "twbs/bootstrap": "v3.2.0"
+        "components/jquery-pjax": "*"
     }
 }
 ```

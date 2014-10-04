@@ -19,20 +19,51 @@ class PjaxExtension extends \Twig_Extension
         $this->pjax = $pjax;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public function getFunctions()
     {
         return array(
-            'is_pjax' => new \Twig_Function_Method($this, 'isPjax', ['is_safe' => ['html']]),
+            'is_pjax'   => new \Twig_Function_Method($this, 'isPjax', ['is_safe' => ['html']]),
+            'pjax_attr' => new \Twig_Function_Method($this, 'generatePjaxAttributes', ['is_safe' => ['html']]),
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function getFilters()
+    {
+        return array(
+            new \Twig_SimpleFilter('to_attr', [$this, 'toAttributes'], ['is_safe' => ['html']]),
+        );
+    }
 
     /**
-     * Was current Request made by PJAX?
+     * Convert array to html attributes
+     *
+     * @param array $attributes
+     *
+     * @return string
+     */
+    public function toAttributes(array $attributes = array())
+    {
+        $htmlAttr = [];
+
+        foreach ($attributes as $key => $value) {
+            $htmlAttr[] = sprintf('%s="%s"', $key, $value);
+        }
+
+        if (!count($htmlAttr)) {
+            return '';
+        }
+
+        return ' ' . implode(' ', $htmlAttr);
+    }
+
+    /**
+     * Has current Request been made by PJAX?
      *
      * @return bool
      */
@@ -41,9 +72,36 @@ class PjaxExtension extends \Twig_Extension
         return $this->pjax->isPjaxRequest();
     }
 
+    /**
+     * Generate PJAX attributes
+     *
+     * @param string  $target             data-pjax-container="$target" where content will load
+     * @param string  $redirectTarget     data-pjax-container="$redirectTarget" where content will load after redirect
+     * @param boolean $redirectCloseModal should Modal be closed after redirect
+     *
+     * @return array
+     */
+    public function generatePjaxAttributes($target = null, $redirectTarget = null, $redirectCloseModal = null)
+    {
+        $attributes = [];
+        if ($target) {
+            $attributes['data-pjax'] = (string)$target;
+        }
+        if ($redirectTarget) {
+            $attributes['data-pjax-redirect-target'] = (string)$redirectTarget;
+        }
+        if ($redirectCloseModal) {
+            $attributes['data-pjax-redirect-close-modal'] = (bool)$redirectCloseModal;
+        }
 
+        return $attributes;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getName()
     {
-        return 'misc_extension';
+        return 'pjax_extension';
     }
 } 
