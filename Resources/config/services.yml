@@ -1,1 +1,15 @@
+parameters:
+    pjax.class: Strontium\PjaxBundle\Pjax
+    pjax.twig.extension.class: Strontium\PjaxBundle\Twig\PjaxExtension
+
 services:
+    pjax:
+        class: %pjax.class%
+        arguments:
+            - @request_stack
+
+    pjax.twig.extension:
+        class:  %pjax.twig.extension.class%
+        arguments: [ @pjax ]
+        tags:
+            - { name: twig.extension }
