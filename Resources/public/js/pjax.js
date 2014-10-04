@@ -490,7 +490,7 @@
     function onPjaxBeforeReplace(event, contents, options) {
         if (options.redirectTarget) {
             var redirectedTo,
-                redirectCookieName = 'autocrm_redirect_' + parsePjaxContainerSelector(options.context.selector);
+                redirectCookieName = 'pjax_redirect_' + parsePjaxContainerSelector(options.context.selector);
 
             if (undefined !== (redirectedTo = cookie.get(redirectCookieName))) {
                 cookie.expire(redirectCookieName);
