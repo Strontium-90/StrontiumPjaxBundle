@@ -29,7 +29,7 @@ class Pjax implements PjaxInterface
      */
     public function generateVersion(Request $request)
     {
-        return $this->versionGenerator->generate($request);
+        return $this->haveGenerator() ? $this->versionGenerator->generate($request) : null;
     }
 
     /**

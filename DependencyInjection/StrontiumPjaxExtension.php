@@ -24,7 +24,7 @@ class StrontiumPjaxExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
-        if ($config['add_version'] === true) {
+        if ($config['add_version'] === true && $config['version_generator']) {
             $container
                 ->getDefinition('pjax')
                 ->addMethodCall('setVersionGenerator', [new Reference($config['version_generator'])]);
