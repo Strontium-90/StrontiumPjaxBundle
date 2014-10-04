@@ -20,5 +20,6 @@ services:
 
     pjax.kernel.event_listener.response:
         class: %pjax.kernel.event_listener.response.class%
-        public: false
         arguments: [ @pjax ]
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: pjaxRedirect }

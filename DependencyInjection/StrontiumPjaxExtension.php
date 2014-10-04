@@ -31,7 +31,6 @@ class StrontiumPjaxExtension extends Extension
 
             $container
                 ->getDefinition('pjax.kernel.event_listener.response')
-                ->setPublic(true)
                 ->addTag('kernel.event_listener', [
                     'event'  => 'kernel.response',
                     'method' => 'addPjaxVersion'
