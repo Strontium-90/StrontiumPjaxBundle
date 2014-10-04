@@ -7,8 +7,6 @@ parameters:
 services:
     pjax:
         class: %pjax.class%
-        arguments:
-            - @request_stack
 
     pjax.twig.extension:
         class:  %pjax.twig.extension.class%
@@ -23,3 +21,4 @@ services:
     pjax.kernel.event_listener.response:
         class: %pjax.kernel.event_listener.response.class%
         public: false
+        arguments: [ @pjax ]

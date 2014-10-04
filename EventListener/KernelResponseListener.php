@@ -1,19 +1,20 @@
 <?php
 namespace Strontium\PjaxBundle\EventListener;
 
+use Strontium\PjaxBundle\PjaxInterface;
 use Strontium\PjaxBundle\VersionGenerator\VersionGeneratorInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 class KernelResponseListener
 {
     /**
-     * @var VersionGeneratorInterface
+     * @var PjaxInterface
      */
-    protected $versionGenerator;
+    protected $pjax;
 
-    public function setVersionGenerator(VersionGeneratorInterface $versionGenerator)
+    public function __construct(PjaxInterface $pjax)
     {
-        $this->versionGenerator = $versionGenerator;
+        $this->pjax = $pjax;
     }
 
     /**
@@ -22,9 +23,9 @@ class KernelResponseListener
     public function addPjaxVersion(FilterResponseEvent $event)
     {
         $request = $event->getRequest();
-        if ($request->headers->get('X-PJAX', false)) {
+        if ($this->pjax->isPjaxRequest($request)) {
             $response = $event->getResponse();
-            $response->headers->set('X-PJAX-Version', $this->versionGenerator->generate($request));
+            $response->headers->set('X-PJAX-Version', $this->pjax->generateVersion($request));
         }
     }
 }

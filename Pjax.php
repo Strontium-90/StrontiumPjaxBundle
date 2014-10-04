@@ -1,28 +1,34 @@
 <?php
 namespace Strontium\PjaxBundle;
 
+use Strontium\PjaxBundle\VersionGenerator\VersionGeneratorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class Pjax implements PjaxInterface
 {
-
     /**
-     * @var Request
+     * @var VersionGeneratorInterface
      */
-    protected $requestStack;
+    protected $versionGenerator;
 
-    public function __construct(RequestStack $requestStack)
+    public function setVersionGenerator(VersionGeneratorInterface $versionGenerator)
     {
-        $this->requestStack = $requestStack;
+        $this->versionGenerator = $versionGenerator;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isPjaxRequest()
+    public function isPjaxRequest(Request $request)
     {
-        return (bool)$this->requestStack->getCurrentRequest()->headers->get('X-PJAX', false);
+        return (bool)$request->headers->get('X-PJAX', false);
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function generateVersion(Request $request)
+    {
+        return $this->versionGenerator->generate($request);
+    }
 }

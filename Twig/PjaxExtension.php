@@ -2,6 +2,7 @@
 namespace Strontium\PjaxBundle\Twig;
 
 use Strontium\PjaxBundle\PjaxInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class PjaxExtension extends \Twig_Extension
 {
@@ -27,6 +28,7 @@ class PjaxExtension extends \Twig_Extension
         return array(
             'is_pjax'   => new \Twig_Function_Method($this, 'isPjax', ['is_safe' => ['html']]),
             'pjax_attr' => new \Twig_Function_Method($this, 'generatePjaxAttributes', ['is_safe' => ['html']]),
+            'pjax_version' => new \Twig_Function_Method($this, 'pjaxVersion', ['is_safe' => ['html']]),
         );
     }
 
@@ -38,6 +40,16 @@ class PjaxExtension extends \Twig_Extension
         return array(
             new \Twig_SimpleFilter('to_attr', [$this, 'toAttributes'], ['is_safe' => ['html']]),
         );
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return string
+     */
+    public function pjaxVersion(Request $request)
+    {
+        return $this->pjax->generateVersion($request);
     }
 
     /**
@@ -66,13 +78,15 @@ class PjaxExtension extends \Twig_Extension
     }
 
     /**
-     * Has current Request been made by PJAX?
+     * Has Request been made by PJAX?
+     *
+     * @param Request $request
      *
      * @return bool
      */
-    public function isPjax()
+    public function isPjax(Request $request)
     {
-        return $this->pjax->isPjaxRequest();
+        return $this->pjax->isPjaxRequest($request);
     }
 
     /**
