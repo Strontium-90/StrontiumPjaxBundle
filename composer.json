@@ -17,8 +17,10 @@
     },
     "target-dir": "Mopa/Bundle/BootstrapBundle",
     "require": {
+        "php": ">=5.4.0",
         "symfony/framework-bundle": "~2.3",
-        "symfony/twig-bundle": "~2.3"
+        "symfony/twig-bundle": "~2.3",
+        "components/jquery-pjax": "*"
     },
     "suggest":  {
 
@@ -28,7 +30,40 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.1.0"
+            "dev-master": "0.1.0-dev"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "components/jquery-pjax",
+                "type": "component",
+                "version": "dev-master",
+                "dist": {
+                    "url": "https://github.com/AntonTyutin/jquery-pjax/archive/master.zip",
+                    "type": "zip"
+                },
+                "source": {
+                    "url": "https://github.com/AntonTyutin/jquery-pjax.git",
+                    "type": "git",
+                    "reference": "master"
+                },
+                "extra": {
+                    "name": "pjax",
+                    "component": {
+                        "scripts": [
+                            "./jquery.pjax.js"
+                        ],
+                        "files": [
+                            "./jquery.pjax.js"
+                        ]
+                    }
+                },
+                "require": {
+                    "robloach/component-installer": "*"
+                }
+            }
+        }
+    ]
 }
