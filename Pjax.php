@@ -31,4 +31,12 @@ class Pjax implements PjaxInterface
     {
         return $this->versionGenerator->generate($request);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function haveGenerator()
+    {
+        return $this->versionGenerator !== null;
+    }
 }

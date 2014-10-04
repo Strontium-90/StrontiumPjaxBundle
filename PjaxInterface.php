@@ -20,4 +20,9 @@ interface PjaxInterface
      * @return string
      */
     public function generateVersion(Request $request);
+
+    /**
+     * @return bool
+     */
+    public function haveGenerator();
 }
