@@ -1,0 +1,14 @@
+--TEST--
+"pjax_version" function
+--TEMPLATE--
+{{ pjax_version(request) }}
+{{ pjax_version(request) }}
+{{ pjax_version(request) }}
+{{ pjax_version(request) }}
+--DATA--
+return ['request' => new \Symfony\Component\HttpFoundation\Request()];
+--EXPECT--
+<meta http-equiv="x-pjax-version" content="1"/>
+<meta http-equiv="x-pjax-version" content="2"/>
+
+<meta http-equiv="x-pjax-version" content="3"/>

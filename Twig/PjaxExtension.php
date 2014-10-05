@@ -49,7 +49,9 @@ class PjaxExtension extends \Twig_Extension
      */
     public function pjaxVersion(Request $request)
     {
-        return $this->pjax->generateVersion($request);
+        $version = $this->pjax->generateVersion($request);
+
+        return $version ? sprintf('<meta http-equiv="x-pjax-version" content="%s"/>', $version) : null;
     }
 
     /**
