@@ -1,0 +1,14 @@
+--TEST--
+"to_attr" filter
+--TEMPLATE--
+{{ {'foo': 'bar'}|to_attr }}
+{{ {'foo': 'bar', 'bool': false}|to_attr }}
+{{ {'foo': 11, 'bool': true}|to_attr }}
+{{ attrs1|to_attr }}
+--DATA--
+return ['attrs1' => ['foo' => 'bar', 'bool' => true]]
+--EXPECT--
+ foo="bar"
+ foo="bar" bool="false"
+ foo="11" bool="true"
+ foo="bar" bool="true"

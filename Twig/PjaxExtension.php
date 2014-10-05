@@ -26,8 +26,8 @@ class PjaxExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'is_pjax'   => new \Twig_Function_Method($this, 'isPjax', ['is_safe' => ['html']]),
-            'pjax_attr' => new \Twig_Function_Method($this, 'generatePjaxAttributes', ['is_safe' => ['html']]),
+            'is_pjax'      => new \Twig_Function_Method($this, 'isPjax', ['is_safe' => ['html']]),
+            'pjax_attr'    => new \Twig_Function_Method($this, 'generatePjaxAttributes', ['is_safe' => ['html']]),
             'pjax_version' => new \Twig_Function_Method($this, 'pjaxVersion', ['is_safe' => ['html']]),
         );
     }
@@ -67,14 +67,14 @@ class PjaxExtension extends \Twig_Extension
             if (is_bool($value)) {
                 $value = $value ? 'true' : 'false';
             }
-            $htmlAttr[] = sprintf('%s="%s"', $key, $value);
+            $htmlAttr[] = sprintf(' %s="%s"', $key, $value);
         }
 
         if (!count($htmlAttr)) {
             return '';
         }
 
-        return ' ' . implode(' ', $htmlAttr);
+        return implode('', $htmlAttr);
     }
 
     /**
@@ -121,4 +121,4 @@ class PjaxExtension extends \Twig_Extension
     {
         return 'pjax_extension';
     }
-} 
+}

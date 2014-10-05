@@ -1,0 +1,14 @@
+--TEST--
+"pjax_attr" function
+--TEMPLATE--
+{{ pjax_attr('main')|to_attr }}
+{{ pjax_attr(null, 'main')|to_attr }}
+{{ pjax_attr(null, null, true)|to_attr }}
+{{ pjax_attr('modal', 'main', true)|to_attr }}
+--DATA--
+return [];
+--EXPECT--
+ data-pjax="main"
+ data-pjax-redirect-target="main"
+ data-pjax-redirect-close-modal="true"
+ data-pjax="modal" data-pjax-redirect-target="main" data-pjax-redirect-close-modal="true"
