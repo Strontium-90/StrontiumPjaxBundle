@@ -13,11 +13,12 @@ class PjaxExtensionTest extends \Twig_Test_IntegrationTestCase
             ->getMockBuilder('Strontium\PjaxBundle\VersionGenerator\AuthTokenGenerator')
             ->disableOriginalConstructor()
             ->getMock();
-
-        $pjax->setVersionGenerator($generator);
         $generator
             ->method('generate')
             ->will($this->onConsecutiveCalls(1, 2, null, 3));
+
+        $pjax->setVersionGenerator($generator);
+
         return array(
             new PjaxExtension($pjax),
         );
