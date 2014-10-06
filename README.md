@@ -1,6 +1,6 @@
 StrontiumPjaxBundle
 ===================
-
+This bundle provide integration of [PJAX](https://github.com/defunkt/jquery-pjax) into [Symfony 2](https://github.com/symfony/symfony) framework.
 
 Installation
 ------------
