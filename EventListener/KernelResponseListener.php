@@ -36,7 +36,7 @@ class KernelResponseListener
         $response = $event->getResponse();
 
         if ($this->pjax->isPjaxRequest($request) && $response->isRedirect()) {
-            $redirectCookieName = 'pjax_redirect_' . $request->headers->get('X-PJAX-Target');
+            $redirectCookieName = sprintf('pjax_redirect_%s', $request->headers->get('X-PJAX-Target'));
             $redirectTo = $response->headers->get('Location');
             $response->headers->setCookie(
                 new Cookie(rawurlencode($redirectCookieName), $redirectTo, 0, '/', null, false, false)
