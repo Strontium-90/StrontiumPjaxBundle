@@ -99,7 +99,7 @@ class PjaxExtension extends \Twig_Extension
      */
     public function getPjaxTarget(Request $request)
     {
-        return $this->pjax->getRealTarget($request);
+        return $this->pjax->getTarget($request);
     }
 
     /**

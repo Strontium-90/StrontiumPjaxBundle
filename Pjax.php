@@ -50,29 +50,16 @@ class Pjax implements PjaxInterface
         }
         $target = $request->query->get('_pjax', $request->headers->get('X-PJAX-Container'));
 
-        if (preg_match('/\[data-pjax-container="([^"]+)"\]/', $target, $m)) {
-            return $m[1];
+        if (!preg_match('/\[data-pjax-container="([^"]+)"\]/', $target, $m)) {
+            return null;
         }
-    }
+        $target = $m[1];
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getRealTarget(Request $request)
-    {
-        $target = $this->getTarget($request);
-        if ($request->cookies->get(sprintf('pjax_redirect_%s', $target))) {
-            return $request->headers->get('X-PJAX-Redirect-Target');
+        $redirectTarget = $request->headers->get('X-PJAX-Redirect-Target');
+        if ($redirectTarget && $request->cookies->get(sprintf('pjax_redirect_%s', $target))) {
+            return $redirectTarget;
         }
 
-        return $this->getTarget($request);
-        /*app.request.headers.get('X-PJAX-Container') == '[data-pjax-container="modal"]'
-        and not app.request.cookies.get('pjax_redirect_modal')
-    or app.request.query.get('_pjax') == '[data-pjax-container="modal"]'
-
-    app.request.headers.get('X-PJAX-Container') == '[data-pjax-container="main"]'
-    or app.request.query.get('_pjax') == '[data-pjax-container="main"]'
-    or app.request.cookies.get('pjax_redirect_modal')
-    and app.request.headers.get('') == 'main'*/
+        return $target;
     }
 }

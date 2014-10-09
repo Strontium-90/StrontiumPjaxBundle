@@ -27,20 +27,11 @@ interface PjaxInterface
     public function haveGenerator();
 
     /**
-     * Real target of PJAX request
+     * Target of PJAX request
      *
      * @param Request $request
      *
      * @return string
      */
     public function getTarget(Request $request);
-
-    /**
-     * Real target of PJAX request
-     *
-     * @param Request $request
-     *
-     * @return string
-     */
-    public function getRealTarget(Request $request);
 }
