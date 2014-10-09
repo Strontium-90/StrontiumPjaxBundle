@@ -29,6 +29,7 @@ class PjaxExtension extends \Twig_Extension
             'is_pjax'      => new \Twig_Function_Method($this, 'isPjax', ['is_safe' => ['html']]),
             'pjax_attr'    => new \Twig_Function_Method($this, 'generatePjaxAttributes', ['is_safe' => ['html']]),
             'pjax_version' => new \Twig_Function_Method($this, 'pjaxVersion', ['is_safe' => ['html']]),
+            'pjax_target'    => new \Twig_Function_Method($this, 'getPjaxTarget', ['is_safe' => ['html']]),
         );
     }
 
@@ -89,6 +90,16 @@ class PjaxExtension extends \Twig_Extension
     public function isPjax(Request $request)
     {
         return $this->pjax->isPjaxRequest($request);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return string
+     */
+    public function getPjaxTarget(Request $request)
+    {
+        return $this->pjax->getRealTarget($request);
     }
 
     /**
