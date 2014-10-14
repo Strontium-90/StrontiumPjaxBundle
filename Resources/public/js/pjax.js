@@ -16,14 +16,9 @@
 
     var app = exports.application = {
 
-
         domInitializers: [],
         params: {},
 
-        selectors: {
-            // выбор элемента из списка
-            listitem: '.list-item-selector'
-        },
 
         initializeDom: function (changesRoot) {
             _.each(this.domInitializers, function (initFn) {
@@ -218,7 +213,7 @@
 
             $form.find('button[data-loading-text]').button('loading');
 
-            processSubmit($form, targetContainer, event);
+            //processSubmit($form, targetContainer, event);
 
             /**
              * Если пытаемся отправить форму с файлами,

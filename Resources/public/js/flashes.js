@@ -65,7 +65,7 @@
         .on('pjax:error', function () {
             app.message('Произошла ошибка', app.MESSAGE_ERROR);
         })
-        .on('pjax:complete', function (event, content, options) {
+        .on('pjax:success', function (event, content, options) {
             var flashes = $(event.target).find(PJAX_FLASH_SELECTOR);
             if (flashes) {
                 $(PJAX_FLASH_CONTAINER).html(flashes.data(PJAX_FLASH));
