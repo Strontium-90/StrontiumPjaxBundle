@@ -13,6 +13,7 @@
     var PJAX_CONTAINER_RELATION = 'pjax-related';
     var PJAX_CONTAINER_EVENT = 'pjax-event';
     var PJAX_CLOSE_MODAL = 'pjax-close-modal';
+    var PJAX_PUSH = 'pjax-push';
 
     var app = exports.application = {
 
@@ -32,8 +33,6 @@
         registerDomInitializer: function (initFn) {
             this.domInitializers.push(initFn);
         },
-
-
 
         getPage: function (route, params, target) {
             var req_params = this.params;
@@ -122,7 +121,6 @@
     };
 
 
-
     $(function () {
         app.initializeDom(document.documentElement);
 
@@ -132,6 +130,7 @@
             if (related) {
                 app.reload(related);
                 $(this).removeData(PJAX_CONTAINER_RELATION);
+                $(this).removeAttr('data-' + PJAX_CONTAINER_RELATION);
             }
 
             $(this).find('.modal-content').html('');
@@ -165,7 +164,6 @@
 
     function onPjaxError(event) {
         hideLoadingIndicators();
-
     }
 
     function onPjaxSend(event) {
@@ -200,7 +198,7 @@
             scrollTo: getPjaxScroll($(this)),
             target: target,
             redirectTarget: redirectTarget,
-            push: target == PJAX_ROOT_CONTAINER_NAME,
+            push: toPush(target, 'GET', $(this).data(PJAX_PUSH)),
             replace: false
         });
     }
@@ -213,7 +211,7 @@
 
             $form.find('button[data-loading-text]').button('loading');
 
-            //processSubmit($form, targetContainer, event);
+            processSubmit($form, targetContainer, event);
 
             /**
              * Если пытаемся отправить форму с файлами,
@@ -233,7 +231,7 @@
                 scrollTo: getPjaxScroll($form),
                 target: target,
                 redirectTarget: targetContainer.data(PJAX_REDIRECT_TARGET_PARAMETER),
-                push: true,
+                push: toPush(target, $form.attr('method'), $(this).data(PJAX_PUSH)),
                 replace: false
             };
 
@@ -249,6 +247,27 @@
             $.pjax.submit(event, targetContainer, params);
 
         }
+    }
+
+    /**
+     * Пушить или нет
+     *
+     * @param target
+     * @param method
+     * @param option bool значение атрибута data-pjax-push
+     * @returns bool
+     */
+    function toPush(target, method, option) {
+        if (option == undefined) {
+            if (method == undefined) {
+                method = 'GET';
+            }
+            method = method.toUpperCase();
+
+            return method == 'GET' && target == PJAX_ROOT_CONTAINER_NAME;
+        }
+
+        return option;
     }
 
     /**
@@ -320,13 +339,11 @@
 
         // после выполненной операции
         target.one('pjax:complete', function (event, xhr, status, request) {
-            if (pjaxEvent)
-            {
+            if (pjaxEvent) {
                 app.trigger(pjaxEvent, request);
             }
             // запрос в пределах модального окна
-            if (isModal)
-            {
+            if (isModal) {
                 // устанавливаем зависимости модального окна
                 related && $(PJAX_MODAL).data(PJAX_CONTAINER_RELATION, related);
                 // позже закроем модал после редиректа
@@ -335,8 +352,7 @@
                 scrollTo && $(PJAX_MODAL).data(PJAX_SCROLLTO, scrollTo);
             }
             // закрываем модальное окно
-            if (closeModal)
-            {
+            if (closeModal) {
                 $modal.modal('hide');
             }
         });
@@ -365,23 +381,23 @@
         hideLoadingIndicators();
     }
 
-    function hideLoadingIndicators()
-    {
+    function hideLoadingIndicators() {
         $('#ajax-loading').fadeOut(100);
         $('.contentLoading').fadeOut(100);
         $(document).find('button[data-loading-text]').button('reset');
     }
 
     function onPjaxBeforeReplace(event, contents, options) {
+        var redirectedTo,
+            redirectCookieName;
         if (options.redirectTarget) {
-            var redirectedTo,
-                redirectCookieName = 'pjax_redirect_' + parsePjaxContainerSelector(options.context.selector);
+            redirectCookieName = 'pjax_redirect_' + parsePjaxContainerSelector(options.context.selector);
 
             if (undefined !== (redirectedTo = cookie.get(redirectCookieName))) {
                 cookie.expire(redirectCookieName);
                 options.context = findTargetContainer(options.redirectTarget);
 
-                if (PJAX_ROOT_CONTAINER_NAME == options.redirectTarget) {
+                if (toPush(options.redirectTarget, 'GET')) {
                     _.extend(event.state, {
                         push: true,
                         url: redirectedTo,
@@ -395,32 +411,31 @@
                 // TODO: доделать нормальный скролл после редиректа
                 var scrollTo = null;
                 if (scrollTo = $modal.data(PJAX_SCROLLTO)) {
-                    $container = findTargetContainer(scrollTo);
+                    var $container = findTargetContainer(scrollTo);
                     var scroll = getPjaxScroll($container);
                     $('body').attr({scrollTop: scroll});
                     $modal.removeData(PJAX_SCROLLTO);
+                    $modal.removeAttr('data-' + PJAX_SCROLLTO);
                 }
 
                 // если надо закрыть модальное окно после редиректа
                 if ($modal.data(PJAX_REDIRECT_CLOSE_MODAL)) {
                     $modal.removeData(PJAX_REDIRECT_CLOSE_MODAL);
+                    $modal.removeAttr('data-' + PJAX_REDIRECT_CLOSE_MODAL);
                     $modal.modal('hide');
                 }
+            }
+        } else {
+            redirectCookieName = 'pjax_redirect_' + findPjaxTargetFor(event.target);
+            if (undefined !== (redirectedTo = cookie.get(redirectCookieName))) {
+                cookie.expire(redirectCookieName);
 
-                // ищем флешки в ответе при редиректе
-                if (Object.keys(contents).length) {
-                    // положим флешки сюда
-                    var $container = $(PJAX_FLASH_CONTAINER);
-                    var items = _.values(_.pick(contents, function (value, key) {
-                        return /\d+/.test(key);
-                    }));
-                    if (items.length) {
-                        // смотрим как дата-saатрибут самго элемента
-                        var flashes = $(items[0]).data(PJAX_FLASH);
-                        if (flashes) {
-                            $container.html(flashes);
-                        }
-                    }
+                if (toPush(findPjaxTargetFor(event.target), 'GET')) {
+                    _.extend(event.state, {
+                        push: true,
+                        url: redirectedTo
+                    });
+                    window.history.pushState(event.state, event.state.title, event.state.url);
                 }
             }
         }

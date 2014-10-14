@@ -66,10 +66,16 @@
             app.message('Произошла ошибка', app.MESSAGE_ERROR);
         })
         .on('pjax:success', function (event, content, options) {
-            var flashes = $(event.target).find(PJAX_FLASH_SELECTOR);
+            var flashes = $(document).find(PJAX_FLASH_SELECTOR);
             if (flashes) {
-                $(PJAX_FLASH_CONTAINER).html(flashes.data(PJAX_FLASH));
+                var flashData = flashes.data(PJAX_FLASH);
+                if (flashData) {
+                    $(PJAX_FLASH_CONTAINER).html(flashData);
+                }
+                flashes.removeData(PJAX_FLASH);
+                flashes.removeAttr('data-' + PJAX_FLASH);
             }
+
         });
 
 })(jQuery, _, application, window);
