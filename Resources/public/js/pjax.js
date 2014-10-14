@@ -3,9 +3,7 @@
 
     // TEST: урл для контейнера (чтоб нормально делать reload)
     var PJAX_URL = 'pjax-url';
-    var PJAX_FLASH = 'pjax-flashes';
-    var PJAX_FLASH_SELECTOR = '[data-' + PJAX_FLASH + ']';
-    var PJAX_FLASH_CONTAINER = '.notification-container';
+
     var PJAX_SCROLLTO = 'pjax-scrollto';
     var PJAX_ROOT_CONTAINER_NAME = 'main';
     var PJAX_REDIRECT_TARGET_PARAMETER = 'pjax-redirect-target';
@@ -17,9 +15,11 @@
     var PJAX_CLOSE_MODAL = 'pjax-close-modal';
 
     var app = exports.application = {
+
+
         domInitializers: [],
         params: {},
-        menu_current_class: 'active',
+
         selectors: {
             // выбор элемента из списка
             listitem: '.list-item-selector'
@@ -38,41 +38,12 @@
             this.domInitializers.push(initFn);
         },
 
-        findCurrentMenuItemByUrl: function (a) {
-            var currentItem;
-            $('#report_nav a[data-route]').each(function () {
-                //var url = Routing.generate($(this).attr('data-route'), app.params);
-                if ($(this).attr('href') === a.pathname) {
-                    currentItem = $(this);
-                }
-            });
-            return currentItem;
-        },
 
-        setCurrentMenuItem: function (currentItem) {
-            $('#report_nav .' + this.menu_current_class).removeClass(this.menu_current_class);
-
-            if (!currentItem || !currentItem.length) return;
-
-            //currentItem.parent().addClass(this.menu_current_class);
-            var self = this;
-            currentItem.parents('#report_nav li').each(function () {
-                $(this).addClass(self.menu_current_class);
-            });
-
-            if (currentItem.hasClass('disabled')) {
-                $('#content').html('<p>' + currentItem.attr('title') + '</p>');
-            }
-        },
 
         getPage: function (route, params, target) {
             var req_params = this.params;
             for (var i in params) {
                 req_params[i] = params[i];
-            }
-
-            if ($('#context')) {
-                this.setCurrentMenuItem($('#report_nav a[data-route="' + route + '"]'));
             }
 
             return this.getUrl(Routing.generate(route, req_params), target);
@@ -131,56 +102,6 @@
             return this.params;
         },
 
-        MESSAGE_SUCCESS: 0,
-        MESSAGE_ERROR: 1,
-        MESSAGE_WARNING: 2,
-        MESSAGE_NOTICE: 3,
-        message: function (text, status) {
-            this.clearMessage();
-            if (!status) {
-                status = this.MESSAGE_SUCCESS;
-            }
-
-            var msgbox = $('<div></div>').appendTo(PJAX_FLASH_CONTAINER);
-            msgbox.addClass('alert');
-            msgbox.hide();
-            msgbox.text(text);
-            switch (status) {
-                case this.MESSAGE_SUCCESS :
-                case 'success' :
-                    msgbox.addClass('alert-success');
-                    break;
-                case this.MESSAGE_NOTICE :
-                case 'notice' :
-                    msgbox.addClass('alert-info');
-                    break;
-                case this.MESSAGE_WARNING :
-                    msgbox.addClass('alert-warning');
-                    msgbox.html('<i class="icon-warning-sign"></i> ' + msgbox.text());
-                    break;
-                case this.MESSAGE_ERROR :
-                case 'error' :
-                    msgbox.addClass('alert-danger');
-                    msgbox.html('<i class="icon-erroralt"></i> ' + msgbox.text());
-                    break;
-            }
-
-            msgbox.data("time", new Date());
-            msgbox.fadeIn(500);
-
-        },
-
-        clearMessage: function () {
-            $('.notification-container div').each(function () {
-                var time = $(this).data("time");
-                if (!time || (new Date() - time >= 5 * 1000)) {
-                    $(this).fadeOut(1000, function () {
-                        $(this).html("");
-                    });
-                }
-            });
-        },
-
         /**
          * Генерируем события приложения
          * @param eventName
@@ -205,30 +126,10 @@
         }
     };
 
-    app.registerDomInitializer(function genericControlsInit() {
-        $("select").chosen({
-            disable_search_threshold: 11,
-            width: '100%',
-            no_results_text: "Упс, ничего не найдено!",
-        });
-        //allow_single_deselect: true
 
-        $('.crm-model-selector').modelSelector();
-
-        $('[data-toggle="tooltip"]').tooltip();
-        $('[data-toggle="popover"]').popover();
-
-        $("input").inputmask();
-    });
-
-    $(window).on('add.mopa-collection-item', function ($collection, row, index) {
-        app.initializeDom(row);
-    });
 
     $(function () {
         app.initializeDom(document.documentElement);
-
-        app.setCurrentMenuItem($('#report_nav li.' + app.menu_current_class + ' a'));
 
         $('#myModal').on('hidden.bs.modal', function () {
             // при закрытии модала обновляем зависимые контейнеры (если заданы)
@@ -256,7 +157,6 @@
         $(document).on('pjax:send', onPjaxSend);
         $(document).on('pjax:error', onPjaxError);
         $(document).on('click',
-            '#report_nav a,' +
             'a[data-pjax],' +
             'a:not([data-toggle]):not([data-behavior]):not([data-skip-pjax]):not([href^="http://"]):not([href^="/_profiler/"])',
             onPjaxLinkClick
@@ -270,13 +170,11 @@
 
     function onPjaxError(event) {
         hideLoadingIndicators();
-        app.message('Произошла ошибка', app.MESSAGE_ERROR);
+
     }
 
     function onPjaxSend(event) {
         var target = $(event.target).data('pjax-container');
-
-        app.clearMessage();
 
         if (target == 'main') {
             $('#ajax-loading').fadeIn(1000);
@@ -300,12 +198,6 @@
         var target = findPjaxTargetFor(this);
         var container = findTargetContainer(target);
         var redirectTarget = $(this).data(PJAX_REDIRECT_TARGET_PARAMETER);
-
-        var currentItem = app.findCurrentMenuItemByUrl(event.currentTarget);
-
-        if (currentItem) {
-            app.setCurrentMenuItem(currentItem);
-        }
 
         processSubmit($(this), container, event);
 
@@ -346,7 +238,7 @@
                 scrollTo: getPjaxScroll($form),
                 target: target,
                 redirectTarget: targetContainer.data(PJAX_REDIRECT_TARGET_PARAMETER),
-                push: $form.attr('method').toLowerCase() === 'get',
+                push: true,
                 replace: false
             };
 
@@ -433,11 +325,13 @@
 
         // после выполненной операции
         target.one('pjax:complete', function (event, xhr, status, request) {
-            if (pjaxEvent) {
+            if (pjaxEvent)
+            {
                 app.trigger(pjaxEvent, request);
             }
             // запрос в пределах модального окна
-            if (isModal) {
+            if (isModal)
+            {
                 // устанавливаем зависимости модального окна
                 related && $(PJAX_MODAL).data(PJAX_CONTAINER_RELATION, related);
                 // позже закроем модал после редиректа
@@ -446,7 +340,8 @@
                 scrollTo && $(PJAX_MODAL).data(PJAX_SCROLLTO, scrollTo);
             }
             // закрываем модальное окно
-            if (closeModal) {
+            if (closeModal)
+            {
                 $modal.modal('hide');
             }
         });
@@ -469,11 +364,6 @@
          if (breadcrumbs) {
          $('#breadcrumbs').html(actions.data('pjax-breadcrumbs'));
          }*/
-
-        var flashes = $(event.target).find(PJAX_FLASH_SELECTOR);
-        if (flashes) {
-            $(PJAX_FLASH_CONTAINER).html(flashes.data(PJAX_FLASH));
-        }
 
         app.initializeDom(event.target);
 
