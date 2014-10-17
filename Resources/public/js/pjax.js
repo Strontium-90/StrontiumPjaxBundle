@@ -389,54 +389,60 @@
 
     function onPjaxBeforeReplace(event, contents, options) {
         var redirectedTo,
-            redirectCookieName;
-        if (options.redirectTarget) {
-            redirectCookieName = 'pjax_redirect_' + parsePjaxContainerSelector(options.context.selector);
+            redirectCookieTargetName,
+            redirectCookieName,
+            optionsTransformer,
+            generateStateParams,
+            redirectTarget = options.redirectTarget;
 
-            if (undefined !== (redirectedTo = cookie.get(redirectCookieName))) {
-                cookie.expire(redirectCookieName);
-                options.context = findTargetContainer(options.redirectTarget);
-
-                if (toPush(options.redirectTarget, 'GET')) {
-                    _.extend(event.state, {
-                        push: true,
-                        url: redirectedTo,
-                        container: options.context.selector
-                    });
-                    window.history.pushState(event.state, event.state.title, event.state.url);
-                }
-
-                var $modal = $(PJAX_MODAL);
-
-                // TODO: доделать нормальный скролл после редиректа
-                var scrollTo = null;
-                if (scrollTo = $modal.data(PJAX_SCROLLTO)) {
-                    var $container = findTargetContainer(scrollTo);
-                    var scroll = getPjaxScroll($container);
-                    $('body').attr({scrollTop: scroll});
-                    $modal.removeData(PJAX_SCROLLTO);
-                    $modal.removeAttr('data-' + PJAX_SCROLLTO);
-                }
-
-                // если надо закрыть модальное окно после редиректа
-                if ($modal.data(PJAX_REDIRECT_CLOSE_MODAL)) {
-                    $modal.removeData(PJAX_REDIRECT_CLOSE_MODAL);
-                    $modal.removeAttr('data-' + PJAX_REDIRECT_CLOSE_MODAL);
-                    $modal.modal('hide');
-                }
-            }
+        if (redirectTarget) {
+            redirectCookieTargetName = parsePjaxContainerSelector(options.context.selector);
+            optionsTransformer = function (options) {
+                return _.extend(options, {
+                    context: findTargetContainer(redirectTarget)
+                });
+            };
+            generateStateParams = function (options) {
+                return {
+                    container: options.context.selector
+                };
+            };
         } else {
-            redirectCookieName = 'pjax_redirect_' + findPjaxTargetFor(event.target);
-            if (undefined !== (redirectedTo = cookie.get(redirectCookieName))) {
-                cookie.expire(redirectCookieName);
+            optionsTransformer = function (options) { return options; };
+            generateStateParams = function (options) { return {}; };
+            redirectTarget = redirectCookieTargetName = findPjaxTargetFor(event.target);
+        }
 
-                if (toPush(findPjaxTargetFor(event.target), 'GET')) {
-                    _.extend(event.state, {
-                        push: true,
-                        url: redirectedTo
-                    });
-                    window.history.pushState(event.state, event.state.title, event.state.url);
-                }
+        redirectCookieName = 'pjax_redirect_' + redirectCookieTargetName;
+
+        if (undefined !== (redirectedTo = cookie.get(redirectCookieName))) {
+            cookie.expire(redirectCookieName);
+
+            options = optionsTransformer(options);
+
+            if (toPush(redirectTarget, 'GET')) {
+                _.extend(event.state, {
+                    push: true,
+                    url: redirectedTo
+                }, generateStateParams(options));
+                window.history.pushState(event.state, event.state.title, event.state.url);
+            }
+
+            var $modal = $(PJAX_MODAL);
+
+            // TODO: доделать нормальный скролл после редиректа
+            var scrollTo = $modal.data(PJAX_SCROLLTO);
+            if (scrollTo) {
+                $('body').attr({scrollTop: getPjaxScroll(findTargetContainer(scrollTo))});
+                $modal.removeData(PJAX_SCROLLTO);
+                $modal.removeAttr('data-' + PJAX_SCROLLTO);
+            }
+
+            // если надо закрыть модальное окно после редиректа
+            if ($modal.data(PJAX_REDIRECT_CLOSE_MODAL)) {
+                $modal.removeData(PJAX_REDIRECT_CLOSE_MODAL);
+                $modal.removeAttr('data-' + PJAX_REDIRECT_CLOSE_MODAL);
+                $modal.modal('hide');
             }
         }
     }
