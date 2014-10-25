@@ -408,8 +408,12 @@
                 };
             };
         } else {
-            optionsTransformer = function (options) { return options; };
-            generateStateParams = function (options) { return {}; };
+            optionsTransformer = function (options) {
+                return options;
+            };
+            generateStateParams = function (options) {
+                return {};
+            };
             redirectTarget = redirectCookieTargetName = findPjaxTargetFor(event.target);
         }
 
