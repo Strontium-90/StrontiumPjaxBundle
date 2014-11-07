@@ -34,7 +34,7 @@
         "symfony/framework-bundle": "~2.3",
         "symfony/twig-bundle": "~2.3",
 
-        "components/jquery-pjax": "*"
+        "components/jquery-pjax": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.2.0"
