@@ -16,16 +16,15 @@
     var PJAX_PUSH = 'pjax-push';
 
     var app = exports.application = {
-
         domInitializers: [],
         params: {},
-
 
         initializeDom: function (changesRoot) {
             _.each(this.domInitializers, function (initFn) {
                 initFn(changesRoot);
             });
         },
+
         /**
          * Добавление колбэка для инициализации добавляемых узлов DOM
          * @param {Function} initFn принимает на вход добавленный узел DOM
@@ -408,12 +407,8 @@
                 };
             };
         } else {
-            optionsTransformer = function (options) {
-                return options;
-            };
-            generateStateParams = function (options) {
-                return {};
-            };
+            optionsTransformer = function (options) { return options; };
+            generateStateParams = function (options) { return {}; };
             redirectTarget = redirectCookieTargetName = findPjaxTargetFor(event.target);
         }
 
