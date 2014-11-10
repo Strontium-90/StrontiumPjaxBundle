@@ -319,11 +319,17 @@
         }
 
         // надо ли закрывать модальное окно после завершения запроса?
-        var $modal = $element.closest(PJAX_MODAL);
-        var closeModal = ($element.data(PJAX_CLOSE_MODAL) != undefined
-                ? $element.data(PJAX_CLOSE_MODAL)
-                : false)
-            && $modal.length > 0;
+        var $modal = $(PJAX_MODAL),
+            closeModal;
+        if ($element.data(PJAX_CLOSE_MODAL) != undefined) {
+            closeModal = $element.data(PJAX_CLOSE_MODAL);
+        } else {
+            closeModal = !$.contains($modal, target);
+        }
+        // закрываем модальное окно
+        if (closeModal) {
+            $modal.modal('hide');
+        }
 
         // события после выполнения pjax-запроса
         var pjaxEvent = $element.data(PJAX_CONTAINER_EVENT);
@@ -349,10 +355,6 @@
                 closeRedirect && $(PJAX_MODAL).data(PJAX_REDIRECT_CLOSE_MODAL, true);
                 // позже прокрутим к контейнеру после закрытия модала
                 scrollTo && $(PJAX_MODAL).data(PJAX_SCROLLTO, scrollTo);
-            }
-            // закрываем модальное окно
-            if (closeModal) {
-                $modal.modal('hide');
             }
         });
     }
@@ -407,8 +409,12 @@
                 };
             };
         } else {
-            optionsTransformer = function (options) { return options; };
-            generateStateParams = function (options) { return {}; };
+            optionsTransformer = function (options) {
+                return options;
+            };
+            generateStateParams = function (options) {
+                return {};
+            };
             redirectTarget = redirectCookieTargetName = findPjaxTargetFor(event.target);
         }
 
