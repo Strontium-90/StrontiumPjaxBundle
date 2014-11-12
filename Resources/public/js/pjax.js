@@ -324,7 +324,7 @@
         if ($element.data(PJAX_CLOSE_MODAL) != undefined) {
             closeModal = $element.data(PJAX_CLOSE_MODAL);
         } else {
-            closeModal = !$.contains($modal, target);
+            closeModal = target.data('pjax-container') != "modal";
         }
         // закрываем модальное окно
         if (closeModal) {
