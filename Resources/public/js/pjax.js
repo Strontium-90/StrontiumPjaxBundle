@@ -171,7 +171,7 @@
         if (target == 'main') {
             $('#ajax-loading').fadeIn(1000);
         } else {
-            var loading = $('<div class="contentLoading"><div class="img"></div>');
+            var loading = $('<div class="contentLoading"><div class="img"></div></div>');
             loading.hide();
             $(event.target).css('position', 'relative');
             $(event.target).append(loading);
