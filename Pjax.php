@@ -37,7 +37,7 @@ class Pjax implements PjaxInterface
      */
     public function haveGenerator()
     {
-        return $this->versionGenerator !== null;
+        return null !== $this->versionGenerator;
     }
 
     /**

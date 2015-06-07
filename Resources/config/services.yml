@@ -10,7 +10,7 @@ services:
 
     pjax.twig.extension:
         class:  %pjax.twig.extension.class%
-        arguments: [ @pjax ]
+        arguments: [ @pjax, @request_stack ]
         tags:
             - { name: twig.extension }
 
