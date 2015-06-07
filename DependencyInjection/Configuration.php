@@ -27,8 +27,14 @@ class Configuration implements ConfigurationInterface
             ->append(
                 (new NodeBuilder())
                     ->arrayNode('layouts')
-                    //->requiresAtLeastOneElement()
+                    ->requiresAtLeastOneElement()
                     ->prototype('scalar')->end()
+            )
+            ->append(
+                (new NodeBuilder())
+                    ->scalarNode('default_layout')
+                    ->isRequired()
+                    ->cannotBeEmpty()
             )
             ->append(
                 (new NodeBuilder())

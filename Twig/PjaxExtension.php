@@ -4,6 +4,7 @@ namespace Strontium\PjaxBundle\Twig;
 use Strontium\PjaxBundle\PjaxInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\HttpKernel;
 
 class PjaxExtension extends \Twig_Extension
 {
@@ -19,9 +20,14 @@ class PjaxExtension extends \Twig_Extension
     protected $layouts = [];
 
     /**
+     * @var string
+     */
+    protected $defaultLayout;
+
+    /**
      * @var RequestStack
      */
-    private $requestStack;
+    protected $requestStack;
 
     /**
      * @param PjaxInterface $pjax
@@ -44,6 +50,7 @@ class PjaxExtension extends \Twig_Extension
             'pjax_version' => new \Twig_Function_Method($this, 'pjaxVersion', ['is_safe' => ['html']]),
             'pjax_target'  => new \Twig_Function_Method($this, 'getPjaxTarget', ['is_safe' => ['html']]),
             'pjax_layout'  => new \Twig_Function_Method($this, 'getLayout', ['is_safe' => ['html']]),
+            'pjax_frame'   => new \Twig_Function_Method($this, 'getFrame', ['is_safe' => ['html']]),
         );
     }
 
@@ -57,26 +64,38 @@ class PjaxExtension extends \Twig_Extension
         );
     }
 
-    public function getLayout()
+    /**
+     * @return string
+     */
+    public function getFrame()
     {
         $request = $this->requestStack->getCurrentRequest();
-        if (!$layout = $request->query->get('_layout')) {
-            if (isset($this->layouts[$this->pjax->getTarget($request)])){
+        if ($this->pjax->isPjaxRequest($request) || null !== $this->requestStack->getParentRequest()) {
+            return $this->layouts['embedded'];
+        }
+
+        return '::base.html.twig';
+    }
+
+    /**
+     * @return string
+     */
+    public function getLayout($layout = null)
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if ($this->pjax->isPjaxRequest($request)) {
+            if (isset($this->layouts[$this->pjax->getTarget($request)])) {
                 return $this->layouts[$this->pjax->getTarget($request)];
+            } else {
+                return $this->layouts[$this->defaultLayout];
             }
         }
-        /*
+        /*if ($layout = $request->query->get('_layout', $layout)) {
+            return $this->layouts[$layout];
+        }*/
 
-         {% if layout is not defined %}
-         {% if pjax_target(app.request) == 'modal' %}
-         {% set layout = 'modal' %}
-         {% elseif pjax_target(app.request) == 'main' %}
-         {% set layout = 'page' %}
-         {% endif %}
-         {% endif %}
-         {% if layout is not defined %}
-         {% set layout = is_pjax(app.request) ? 'inline' : 'page' %}
-         {% endif %}*/
+        return $this->layouts[$this->defaultLayout];
     }
 
     /**
@@ -87,6 +106,18 @@ class PjaxExtension extends \Twig_Extension
     public function registerLayouts(array $layouts = array())
     {
         $this->layouts = $layouts;
+
+        return $this;
+    }
+
+    /**
+     * @param string $defaultLayout
+     *
+     * @return $this
+     */
+    public function setDefaultLayout($defaultLayout)
+    {
+        $this->defaultLayout = $defaultLayout;
 
         return $this;
     }
