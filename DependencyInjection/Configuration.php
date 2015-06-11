@@ -24,12 +24,25 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->addDefaultsIfNotSet()
-            ->append(
-                (new NodeBuilder())
-                    ->arrayNode('layouts')
+            ->children()
+                ->arrayNode('layouts')
                     ->requiresAtLeastOneElement()
                     ->prototype('scalar')->end()
-            )
+                ->end()
+                ->arrayNode('frames')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('base')
+                            ->defaultValue('StrontiumPjaxBundle::base.html.twig')
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode('embedded')
+                            ->defaultValue('StrontiumPjaxBundle::embedded.html.twig')
+                            ->cannotBeEmpty()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
             ->append(
                 (new NodeBuilder())
                     ->scalarNode('default_layout')
@@ -38,7 +51,7 @@ class Configuration implements ConfigurationInterface
             )
             ->append(
                 (new NodeBuilder())
-                    ->booleanNode('add_version')
+                    ->booleanNode('add_content_version')
                     ->defaultValue(false)
             )
             ->append(

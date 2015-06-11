@@ -4,6 +4,7 @@ namespace Strontium\PjaxBundle\EventListener;
 use Strontium\PjaxBundle\PjaxInterface;
 use Strontium\PjaxBundle\VersionGenerator\VersionGeneratorInterface;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 class KernelResponseListener
@@ -13,6 +14,9 @@ class KernelResponseListener
      */
     protected $pjax;
 
+    /**
+     * @param PjaxInterface $pjax
+     */
     public function __construct(PjaxInterface $pjax)
     {
         $this->pjax = $pjax;
@@ -30,6 +34,11 @@ class KernelResponseListener
         }
     }
 
+    /**
+     * @param FilterResponseEvent $event
+     *
+     * @return Response
+     */
     public function pjaxRedirect(FilterResponseEvent $event)
     {
         $request = $event->getRequest();

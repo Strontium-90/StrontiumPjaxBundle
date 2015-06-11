@@ -25,10 +25,11 @@ class StrontiumPjaxExtension extends Extension
         $loader->load('services.yml');
 
         $container->getDefinition('pjax.twig.extension')
-                  ->addMethodCall('registerLayouts', [$config['layouts']])
+                  ->addMethodCall('setLayouts', [$config['layouts']])
+                  ->addMethodCall('setFrames', [$config['frames']])
                   ->addMethodCall('setDefaultLayout', [$config['default_layout']]);
 
-        if ($config['add_version'] === true && $config['version_generator']) {
+        if ($config['add_content_version'] === true && $config['version_generator']) {
             $container
                 ->getDefinition('pjax')
                 ->addMethodCall('setVersionGenerator', [new Reference($config['version_generator'])]);

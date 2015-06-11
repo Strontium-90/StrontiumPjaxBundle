@@ -20,6 +20,11 @@ class PjaxExtension extends \Twig_Extension
     protected $layouts = [];
 
     /**
+     * @var array
+     */
+    protected $frames = [];
+
+    /**
      * @var string
      */
     protected $defaultLayout;
@@ -71,10 +76,10 @@ class PjaxExtension extends \Twig_Extension
     {
         $request = $this->requestStack->getCurrentRequest();
         if ($this->pjax->isPjaxRequest($request) || null !== $this->requestStack->getParentRequest()) {
-            return $this->layouts['embedded'];
+            return $this->frames['embedded'];
         }
 
-        return 'StrontiumPjaxBundle::base.html.twig';
+        return $this->frames['base'];
     }
 
     /**
@@ -100,11 +105,23 @@ class PjaxExtension extends \Twig_Extension
     }
 
     /**
+     * @param array $frames
+     *
+     * @return $this
+     */
+    public function setFrames(array $frames)
+    {
+        $this->frames = $frames;
+
+        return $this;
+    }
+
+    /**
      * @param array $layouts
      *
      * @return $this
      */
-    public function registerLayouts(array $layouts = array())
+    public function setLayouts(array $layouts)
     {
         $this->layouts = $layouts;
 
