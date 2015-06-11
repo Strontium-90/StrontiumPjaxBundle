@@ -1,0 +1,17 @@
+{% spaceless %}
+    {% if is_pjax(app.request) %}
+        {% from 'MopaBootstrapBundle::flash.html.twig' import session_flash %}
+        {#{% set as = mopa_bootstrap_menu('main') %}#}
+        {#{% set breadcrumb = apy_breadcrumb_trail_render() %}#}
+        <div class="hidden" data-title="{{ block('title')|striptags }}"
+                {#data-pjax-actions="{{ block('actions')|escape }}"#}
+                {%- if breadcrumb is defined %} data-pjax-breadcrumbs="{{ breadcrumb|escape }}"{% endif %}
+                {%- if app.session.flashbag.peekAll|length > 0 %} data-pjax-flashes="{{ session_flash(true)|escape }}"
+                {%- endif -%}
+                ></div>
+    {% endif %}
+    {% block content %}{% endblock %}
+{% endspaceless %}
+<script type="text/javascript">
+    {% block javascript %}{% endblock %}
+</script>

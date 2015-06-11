@@ -74,7 +74,7 @@ class PjaxExtension extends \Twig_Extension
             return $this->layouts['embedded'];
         }
 
-        return '::base.html.twig';
+        return 'StrontiumPjaxBundle::base.html.twig';
     }
 
     /**
@@ -85,8 +85,9 @@ class PjaxExtension extends \Twig_Extension
         $request = $this->requestStack->getCurrentRequest();
 
         if ($this->pjax->isPjaxRequest($request)) {
-            if (isset($this->layouts[$this->pjax->getTarget($request)])) {
-                return $this->layouts[$this->pjax->getTarget($request)];
+            $target = $this->pjax->getTarget($request);
+            if (isset($this->layouts[$target])) {
+                return $this->layouts[$target];
             } else {
                 return $this->layouts[$this->defaultLayout];
             }

@@ -1,0 +1,8 @@
+{% extends pjax_frame() %}
+
+{% block content %}
+    {% spaceless %}
+        {% block filter %}{% endblock %}
+        {% block body %}{% endblock %}
+    {% endspaceless %}
+{% endblock %}

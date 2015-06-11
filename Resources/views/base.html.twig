@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+
+    <script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
+    <script type="text/javascript" src="{{ asset('components/lodash/dist/lodash.compat.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('components/cookies/src/cookies.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('components/jquery-pjax/jquery.pjax.js') }}"></script>
+
+    {% javascripts filter='?yui_js' output='js/bootstrap.js'
+    '%kernel.root_dir%/../vendor/twbs/bootstrap/js/transition.js'
+    '%kernel.root_dir%/../vendor/twbs/bootstrap/js/modal.js'
+    '%kernel.root_dir%/../vendor/twbs/bootstrap/js/collapse.js'
+    '%kernel.root_dir%/../vendor/twbs/bootstrap/js/dropdown.js'
+    '%kernel.root_dir%/../vendor/twbs/bootstrap/js/tab.js'
+    '%kernel.root_dir%/../vendor/twbs/bootstrap/js/tooltip.js'
+    '%kernel.root_dir%/../vendor/twbs/bootstrap/js/popover.js'
+    '%kernel.root_dir%/../vendor/twbs/bootstrap/js/button.js'
+    '%kernel.root_dir%/../vendor/twbs/bootstrap/js/alert.js'
+
+
+    '@MopaBootstrapBundle/Resources/public/components/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.js'
+    '@MopaBootstrapBundle/Resources/public/components/smalot-bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.ru.js'
+    '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {% javascripts filter='?yui_js' output='js/app.js'
+    '@StrontiumPjaxBundle/Resources/public/js/pjax.js'
+    '@StrontiumPjaxBundle/Resources/public/js/flashes.js'
+    '@StrontiumPjaxBundle/Resources/public/js/ajax-multipart-form.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {% stylesheets filter='?yui_css' output='css/styles.css'
+    '@AcmeTestBundle/Resources/public/less/main.less' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+</head>
+<body>
+<div class="panel panel-default">
+    <div class="panel-heading"><a href="{{ path('acme_test_default_index') }}">index</a> | <a
+                href="{{ path('acme_test_default_foo') }}">foo</a> | <a
+                href="{{ path('acme_test_default_bar') }}">bar</a></div>
+    <div class="panel-body" data-pjax-container="main">
+        {% block content %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+    </div>
+</div>
+</body>
+</html>
+

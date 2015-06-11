@@ -1,0 +1,13 @@
+{% extends pjax_frame() %}
+{% block content %}
+    <div class="content-head">
+        <h4 class="content-heading">{% block title %}{% endblock %}</h4>
+        <div class="content-actions">
+           {% block actions %}{% endblock %}
+        </div>
+    </div>
+    <div class="content-body">
+        {% block filter %}{% endblock %}
+        {% block body %}{% endblock %}
+    </div>
+{% endblock %}
