@@ -330,13 +330,6 @@
                 }, generateStateParams(options));
                 window.history.pushState(event.state, event.state.title, event.state.url);
             }
-
-            var $modal = $(PJAX_MODAL);
-
-            // если надо закрыть модальное окно после редиректа
-            if (1) {
-                $modal.modal('hide');
-            }
         }
     }
 
