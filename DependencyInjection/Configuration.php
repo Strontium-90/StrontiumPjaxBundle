@@ -25,6 +25,12 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->addDefaultsIfNotSet()
             ->children()
+                ->booleanNode('add_content_version')->defaultValue(false)->end()
+                ->scalarNode('version_generator')->defaultValue('pjax.version_generator.auth_token')->end()
+                ->scalarNode('default_layout')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                ->end()
                 ->arrayNode('layouts')
                     ->requiresAtLeastOneElement()
                     ->prototype('scalar')->end()
@@ -42,23 +48,6 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-            ->end()
-            ->append(
-                (new NodeBuilder())
-                    ->scalarNode('default_layout')
-                    ->isRequired()
-                    ->cannotBeEmpty()
-            )
-            ->append(
-                (new NodeBuilder())
-                    ->booleanNode('add_content_version')
-                    ->defaultValue(false)
-            )
-            ->append(
-                (new NodeBuilder())
-                    ->scalarNode('version_generator')
-                    ->defaultValue('pjax.version_generator.auth_token')
-            )
             ->end();
 
         return $treeBuilder;

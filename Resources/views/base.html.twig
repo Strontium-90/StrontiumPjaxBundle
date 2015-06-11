@@ -31,9 +31,14 @@
     {% javascripts filter='?yui_js' output='js/app.js'
     '@StrontiumPjaxBundle/Resources/public/js/pjax.js'
     '@StrontiumPjaxBundle/Resources/public/js/flashes.js'
-    '@StrontiumPjaxBundle/Resources/public/js/ajax-multipart-form.js' %}
+    '@StrontiumPjaxBundle/Resources/public/js/ajax-multipart-form.js'
+    '@AcmeTestBundle/Resources/public/js/application.js'
+    %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 
     {% stylesheets filter='?yui_css' output='css/styles.css'
     '@AcmeTestBundle/Resources/public/less/main.less' %}
@@ -46,12 +51,27 @@
 <div class="panel panel-default">
     <div class="panel-heading"><a href="{{ path('acme_test_default_index') }}">index</a> | <a
                 href="{{ path('acme_test_default_foo') }}">foo</a> | <a
-                href="{{ path('acme_test_default_bar') }}">bar</a></div>
+                href="{{ path('acme_test_default_bar') }}">bar</a> | <a {{ pjax_attr('modal')|to_attr }}
+                href="{{ path('acme_test_default_bar') }}">modal bar</a></div>
     <div class="panel-body" data-pjax-container="main">
         {% block content %}{% endblock %}
         {% block javascripts %}{% endblock %}
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" data-pjax-container="modal">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.modal -->
+
 </body>
 </html>
 

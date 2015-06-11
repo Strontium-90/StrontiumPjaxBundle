@@ -204,11 +204,10 @@ class PjaxExtension extends \Twig_Extension
      *
      * @param string  $target             data-pjax-container="$target" where content will load
      * @param string  $redirectTarget     data-pjax-container="$redirectTarget" where content will load after redirect
-     * @param boolean $redirectCloseModal should Modal be closed after redirect
      *
      * @return array
      */
-    public function generatePjaxAttributes($target = null, $redirectTarget = null, $redirectCloseModal = null)
+    public function generatePjaxAttributes($target = null, $redirectTarget = null)
     {
         $attributes = [];
         if ($target) {
@@ -216,9 +215,6 @@ class PjaxExtension extends \Twig_Extension
         }
         if ($redirectTarget) {
             $attributes['data-pjax-redirect-target'] = (string)$redirectTarget;
-        }
-        if ($redirectCloseModal) {
-            $attributes['data-pjax-redirect-close-modal'] = $redirectCloseModal;
         }
 
         return $attributes;

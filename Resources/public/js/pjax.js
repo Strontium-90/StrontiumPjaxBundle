@@ -1,21 +1,21 @@
 (function ($, _, cookie, exports) {
     'use strict';
 
-    // TEST: урл для контейнера (чтоб нормально делать reload)
-    var PJAX_URL = 'pjax-url';
+    var PJAX_URL = 'pjax-url'; // TEST: урл для контейнера (чтоб нормально делать reload)
 
-    var PJAX_SCROLLTO = 'pjax-scrollto';
     var PJAX_ROOT_CONTAINER_NAME = 'main';
     var PJAX_REDIRECT_TARGET_PARAMETER = 'pjax-redirect-target';
-    var PJAX_REDIRECT_CLOSE_MODAL = 'pjax-redirect-close-modal';
-    // идентификатор модального окна
-    var PJAX_MODAL = '#myModal';
-    var PJAX_CONTAINER_RELATION = 'pjax-related';
+
+    var PJAX_MODAL = '#myModal'; // идентификатор модального окна
     var PJAX_CONTAINER_EVENT = 'pjax-event';
-    var PJAX_CLOSE_MODAL = 'pjax-close-modal';
     var PJAX_PUSH = 'pjax-push';
 
     var app = exports.application = {
+        linkSelector: 'a[data-pjax],' +
+        'a:not([data-toggle]):not([data-behavior]):not([data-skip-pjax]):not([href^="http://"]):not([href^="/_profiler/"])',
+
+        formSelector: 'form:not([w]):not([data-skip-pjax])',
+
         domInitializers: [],
         params: {},
 
@@ -60,7 +60,6 @@
             var url = url || this.getPjaxContainerUrl(container) || '';
 
             return $.pjax({
-                scrollTo: null,
                 url: url,
                 container: container,
                 method: 'get',
@@ -73,27 +72,6 @@
             return this.getUrl(url, target);
         },
 
-        setParametr: function (name, value, reload) {
-            this.params[name] = value ? value.toString() : null;
-
-            if (reload) {
-                this.reload();
-            }
-        },
-
-        setParametrs: function (params) {
-            for (var name in params) {
-                this.params[name] = params[name] ? params[name].toString() : null;
-            }
-        },
-
-        getParametr: function (name) {
-            return this.params[name];
-        },
-
-        getParametrs: function () {
-            return this.params;
-        },
 
         /**
          * Генерируем события приложения
@@ -123,22 +101,14 @@
     $(function () {
         app.initializeDom(document.documentElement);
 
-        $('#myModal').on('hidden.bs.modal', function () {
-            // при закрытии модала обновляем зависимые контейнеры (если заданы)
-            var related = $(this).data(PJAX_CONTAINER_RELATION);
-            if (related) {
-                app.reload(related);
-                $(this).removeData(PJAX_CONTAINER_RELATION);
-                $(this).removeAttr('data-' + PJAX_CONTAINER_RELATION);
-            }
-
+        $(PJAX_MODAL).on('hidden.bs.modal', function () {
             $(this).find('.modal-content').html('');
         });
-    });
 
-    if ($.support.pjax) {
-        initializePjax();
-    }
+        if ($.support.pjax) {
+            initializePjax();
+        }
+    });
 
     function initializePjax() {
         $.pjax.defaults.timeout = 50000;
@@ -147,36 +117,12 @@
             $('#myModal').on('pjax:send', onModalPjaxSend);
         });
 
-        $(document).on('pjax:send', onPjaxSend);
-        $(document).on('pjax:error', onPjaxError);
-        $(document).on('click',
-            'a[data-pjax],' +
-            'a:not([data-toggle]):not([data-behavior]):not([data-skip-pjax]):not([href^="http://"]):not([href^="/_profiler/"])',
-            onPjaxLinkClick
-        );
-        $(document).on('submit', 'form:not([w]):not([data-skip-pjax])', onPjaxFormSubmit);
+        $(document).on('click', app.linkSelector, onPjaxLinkClick);
+        $(document).on('submit', app.formSelector, onPjaxFormSubmit);
         $(document).on('pjax:complete', onPjaxComplete);
 
         $(document).on('pjax:beforeSend', onPjaxBeforeSend);
         $(document).on('pjax:beforeReplace', onPjaxBeforeReplace);
-    }
-
-    function onPjaxError(event) {
-        hideLoadingIndicators();
-    }
-
-    function onPjaxSend(event) {
-        var target = $(event.target).data('pjax-container');
-
-        if (target == 'main') {
-            $('#ajax-loading').fadeIn(1000);
-        } else {
-            var loading = $('<div class="contentLoading"><div class="img"></div></div>');
-            loading.hide();
-            $(event.target).css('position', 'relative');
-            $(event.target).append(loading);
-            loading.fadeIn(500);
-        }
     }
 
     function onModalPjaxSend(event, xhr, options) {
@@ -194,7 +140,6 @@
         processSubmit($(this), container, event);
 
         $.pjax.click(event, container, {
-            scrollTo: getPjaxScroll($(this)),
             target: target,
             redirectTarget: redirectTarget,
             push: toPush(target, 'GET', $(this).data(PJAX_PUSH)),
@@ -207,8 +152,6 @@
             var $form = $(this);
             var target = findPjaxTargetFor(this);
             var targetContainer = findTargetContainer(target);
-
-            $form.find('button[data-loading-text]').button('loading');
 
             processSubmit($form, targetContainer, event);
 
@@ -227,7 +170,6 @@
             }
 
             var params = {
-                scrollTo: getPjaxScroll($form),
                 target: target,
                 redirectTarget: targetContainer.data(PJAX_REDIRECT_TARGET_PARAMETER),
                 push: toPush(target, $form.attr('method'), $(this).data(PJAX_PUSH)),
@@ -269,27 +211,6 @@
         return option;
     }
 
-    /**
-     * После запроса прокручиваем к заданному контейнеру (или к началу страницы)
-     * Контейнер задается дата-атрибутом (PJAX_SCROLLTO)
-     * data-pjax-scrollto="container"
-     *
-     * @param $element
-     * @returns {number}
-     */
-    function getPjaxScroll($element) {
-        // по-умолчанию крутим к началу страницы
-        // Но нужно скроллить к элементу, если он вне экрана
-        var scroll = $element.offset().top;
-        var name = $element.data(PJAX_SCROLLTO);
-        var $container = null;
-        scroll = $element.offset().top;
-        if (name && ($container = findTargetContainer(name))) {
-            scroll = $container.offset().top;
-        }
-
-        return scroll;
-    }
 
     /**
      * Дополнительная обработка pjax-запроса
@@ -321,11 +242,8 @@
         // надо ли закрывать модальное окно после завершения запроса?
         var $modal = $(PJAX_MODAL),
             closeModal;
-        if ($element.data(PJAX_CLOSE_MODAL) != undefined) {
-            closeModal = $element.data(PJAX_CLOSE_MODAL);
-        } else {
-            closeModal = target.data('pjax-container') != "modal";
-        }
+
+        closeModal = target.data('pjax-container') != "modal";
         // закрываем модальное окно
         if (closeModal) {
             $modal.modal('hide');
@@ -335,26 +253,12 @@
         var pjaxEvent = $element.data(PJAX_CONTAINER_EVENT);
         // открываем модальное окно?
         var isModal = $element.data('pjax') != undefined && $element.data('pjax') === 'modal';
-        // есть зависимости (контейнера) от модала?
-        var related = $element.data(PJAX_CONTAINER_RELATION);
-        // нужно закрывать модальное окно после редиректа?
-        var closeRedirect = $element.data(PJAX_REDIRECT_CLOSE_MODAL);
-        // нужно прокрутить к контейнеру после закрытия модала
-        var scrollTo = $element.data(PJAX_SCROLLTO);
+
 
         // после выполненной операции
         target.one('pjax:complete', function (event, xhr, status, request) {
             if (pjaxEvent) {
                 app.trigger(pjaxEvent, request);
-            }
-            // запрос в пределах модального окна
-            if (isModal) {
-                // устанавливаем зависимости модального окна
-                related && $(PJAX_MODAL).data(PJAX_CONTAINER_RELATION, related);
-                // позже закроем модал после редиректа
-                closeRedirect && $(PJAX_MODAL).data(PJAX_REDIRECT_CLOSE_MODAL, true);
-                // позже прокрутим к контейнеру после закрытия модала
-                scrollTo && $(PJAX_MODAL).data(PJAX_SCROLLTO, scrollTo);
             }
         });
     }
@@ -378,15 +282,9 @@
          }*/
 
         app.initializeDom(event.target);
-
-        hideLoadingIndicators();
     }
 
-    function hideLoadingIndicators() {
-        $('#ajax-loading').fadeOut(100);
-        $('.contentLoading').fadeOut(100);
-        $(document).find('button[data-loading-text]').button('reset');
-    }
+
 
     function onPjaxBeforeReplace(event, contents, options) {
         var redirectedTo,
@@ -435,18 +333,8 @@
 
             var $modal = $(PJAX_MODAL);
 
-            // TODO: доделать нормальный скролл после редиректа
-            var scrollTo = $modal.data(PJAX_SCROLLTO);
-            if (scrollTo) {
-                $('body').attr({scrollTop: getPjaxScroll(findTargetContainer(scrollTo))});
-                $modal.removeData(PJAX_SCROLLTO);
-                $modal.removeAttr('data-' + PJAX_SCROLLTO);
-            }
-
             // если надо закрыть модальное окно после редиректа
-            if ($modal.data(PJAX_REDIRECT_CLOSE_MODAL)) {
-                $modal.removeData(PJAX_REDIRECT_CLOSE_MODAL);
-                $modal.removeAttr('data-' + PJAX_REDIRECT_CLOSE_MODAL);
+            if (1) {
                 $modal.modal('hide');
             }
         }
