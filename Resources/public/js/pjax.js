@@ -251,9 +251,6 @@
 
         // события после выполнения pjax-запроса
         var pjaxEvent = $element.data(PJAX_CONTAINER_EVENT);
-        // открываем модальное окно?
-        var isModal = $element.data('pjax') != undefined && $element.data('pjax') === 'modal';
-
 
         // после выполненной операции
         target.one('pjax:complete', function (event, xhr, status, request) {
@@ -365,5 +362,21 @@
         // TODO сделать разэкранирование символов извлеченного имени, если оно экранировано
         return selector.match(/^\[data-pjax-container="(.+?)"\]$/)[1];
     }
+
+    $.fn.serializeMultipart = function() {
+        var obj = $(this);
+        /* ADD FILE TO PARAM AJAX */
+        var formData = new FormData();
+        $.each($(obj).find("input[type='file']"), function(i, tag) {
+            $.each($(tag)[0].files, function(i, file) {
+                formData.append(tag.name, file);
+            });
+        });
+        var params = $(obj).serializeArray();
+        $.each(params, function (i, val) {
+            formData.append(val.name, val.value);
+        });
+        return formData;
+    };
 
 })(jQuery, _, Cookies, window);
