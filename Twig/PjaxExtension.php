@@ -4,7 +4,6 @@ namespace Strontium\PjaxBundle\Twig;
 use Strontium\PjaxBundle\PjaxInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\HttpKernel;
 
 class PjaxExtension extends \Twig_Extension
 {
@@ -76,7 +75,7 @@ class PjaxExtension extends \Twig_Extension
     {
         $request = $this->requestStack->getCurrentRequest();
         if ($this->pjax->isPjaxRequest($request) || null !== $this->requestStack->getParentRequest()) {
-            return $this->frames['embedded'];
+            return $this->frames['pjax'];
         }
 
         return $this->frames['base'];
