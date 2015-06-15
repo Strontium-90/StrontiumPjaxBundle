@@ -380,3 +380,7 @@
     };
 
 })(jQuery, _, Cookies, window);
+
+requirejs(["helper/util"], function(util) {
+    alert(123);
+});

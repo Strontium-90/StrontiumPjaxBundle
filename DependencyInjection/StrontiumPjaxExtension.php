@@ -2,16 +2,17 @@
 
 namespace Strontium\PjaxBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
+use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader;
 
 /**
  * {@inheritdoc}
  */
-class StrontiumPjaxExtension extends Extension
+class StrontiumPjaxExtension extends Extension implements PrependExtensionInterface
 {
     /**
      * {@inheritdoc}
@@ -41,5 +42,21 @@ class StrontiumPjaxExtension extends Extension
                     'method' => 'addPjaxVersion'
                 ]);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function prepend(ContainerBuilder $container)
+    {
+        $container->prependExtensionConfig('assetic', array(
+            'assets' => array(
+                'pjax' => array(
+                    'input' => array(
+                        '@StrontiumPjaxBundle/Resources/public/js/pjax.js',
+                    ),
+                )
+            )
+        ));
     }
 }
