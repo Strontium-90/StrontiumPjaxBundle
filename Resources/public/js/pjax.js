@@ -1,13 +1,10 @@
 (function ($, _, cookie, exports) {
     'use strict';
 
-    var PJAX_URL = 'pjax-url'; // TEST: урл для контейнера (чтоб нормально делать reload)
-
     var PJAX_ROOT_CONTAINER_NAME = 'main';
     var PJAX_REDIRECT_TARGET_PARAMETER = 'pjax-redirect-target';
 
     var PJAX_MODAL = '#myModal'; // идентификатор модального окна
-    var PJAX_CONTAINER_EVENT = 'pjax-event';
     var PJAX_PUSH = 'pjax-push';
 
     var app = exports.application = {
@@ -46,18 +43,9 @@
             return findTargetContainer(target || PJAX_ROOT_CONTAINER_NAME);
         },
 
-        /**
-         * Адрес для контейнера
-         * @param $container
-         * @returns {*}
-         */
-        getPjaxContainerUrl: function ($container) {
-            return $container.data(PJAX_URL);
-        },
-
         getUrl: function (url, target) {
             var container = this.getPjaxContainer(target);
-            var url = url || this.getPjaxContainerUrl(container) || '';
+            var url = url || '';
 
             return $.pjax({
                 url: url,
@@ -133,6 +121,9 @@
     }
 
     function onPjaxLinkClick(event) {
+        if (event.isDefaultPrevented()) {
+            return;
+        }
         var target = findPjaxTargetFor(this);
         var container = findTargetContainer(target);
         var redirectTarget = $(this).data(PJAX_REDIRECT_TARGET_PARAMETER);
@@ -148,50 +139,50 @@
     }
 
     function onPjaxFormSubmit(event) {
-        if (!event.isDefaultPrevented()) {
-            var $form = $(this);
-            var target = findPjaxTargetFor(this);
-            var targetContainer = findTargetContainer(target);
-
-            processSubmit($form, targetContainer, event);
-
-            /**
-             * Если пытаемся отправить форму с файлами,
-             * но браузером не поддерживается FormData,
-             * тогда просто штатно отправляем форму.
-             * Пока так.
-             */
-            if ($form.attr('')
-                && window.FormData != undeifned
-                && $.fn.serializeMultipart != undefined) {
-                event.stopPropagation();
-                $form.submit();
-                return;
-            }
-
-            var params = {
-                target: target,
-                redirectTarget: targetContainer.data(PJAX_REDIRECT_TARGET_PARAMETER),
-                push: toPush(target, $form.attr('method'), $(this).data(PJAX_PUSH)),
-                replace: false
-            };
-
-            if ($form.attr('enctype') === 'multipart/form-data') {
-                _.extend(params, {
-                    contentType: false,
-                    processData: false,
-                    cache: false,
-                    data: $form.serializeMultipart()
-                })
-            }
-
-            $.pjax.submit(event, targetContainer, params);
-
+        if (event.isDefaultPrevented()) {
+            return;
         }
+        var $form = $(this);
+        var target = findPjaxTargetFor(this);
+        var targetContainer = findTargetContainer(target);
+
+        processSubmit($form, targetContainer, event);
+
+        /**
+         * Если пытаемся отправить форму с файлами,
+         * но браузером не поддерживается FormData,
+         * тогда просто штатно отправляем форму.
+         * Пока так.
+         */
+        if ($form.attr('')
+            && window.FormData != undeifned
+            && $.fn.serializeMultipart != undefined) {
+            event.stopPropagation();
+            $form.submit();
+            return;
+        }
+
+        var params = {
+            target: target,
+            redirectTarget: targetContainer.data(PJAX_REDIRECT_TARGET_PARAMETER),
+            push: toPush(target, $form.attr('method'), $(this).data(PJAX_PUSH)),
+            replace: false
+        };
+
+        if ($form.attr('enctype') === 'multipart/form-data') {
+            _.extend(params, {
+                contentType: false,
+                processData: false,
+                cache: false,
+                data: $form.serializeMultipart()
+            })
+        }
+
+        $.pjax.submit(event, targetContainer, params);
     }
 
     /**
-     * Пушить или нет
+     * Пушить стейт или нет
      *
      * @param target
      * @param method
@@ -215,22 +206,6 @@
     /**
      * Дополнительная обработка pjax-запроса
      *
-     * data-pjax-close-modal="false"
-     * По-умолчанию модал не закрывается. Если надо закрывать
-     * (например, при выборе элемента из списка)
-     * установите атрибут data-close-modal="true"
-     *
-     * data-pjax-related="main"
-     * Контейнер который нужно обновить после закрытия модала
-     * Это чтоб не следить за кучей зависимостей при операциях в модале
-     *
-     * data-pjax-event="event:name"
-     * Генерируем событие после выполнения pjax-запроса (pjax:complete) через application.trigger
-     *
-     * data-pjax-redirect-close-modal="true"
-     * Нужно закрыть модальное окно после редиректа
-     * Например, после сохранения элемента в окне
-     *
      * @param $element - pjax-элемент (form или a.href)
      * @param target - pjax-контейнер, куда будем пихать ответ
      */
@@ -248,16 +223,6 @@
         if (closeModal) {
             $modal.modal('hide');
         }
-
-        // события после выполнения pjax-запроса
-        var pjaxEvent = $element.data(PJAX_CONTAINER_EVENT);
-
-        // после выполненной операции
-        target.one('pjax:complete', function (event, xhr, status, request) {
-            if (pjaxEvent) {
-                app.trigger(pjaxEvent, request);
-            }
-        });
     }
 
     function onPjaxComplete(event, content, status, options) {
@@ -280,8 +245,6 @@
 
         app.initializeDom(event.target);
     }
-
-
 
     function onPjaxBeforeReplace(event, contents, options) {
         var redirectedTo,
@@ -339,8 +302,8 @@
         var $elem = $(elem);
 
         return $elem.data('pjax')
-        || $elem.closest('[data-pjax-container]').data('pjax-container')
-        || PJAX_ROOT_CONTAINER_NAME;
+            || $elem.closest('[data-pjax-container]').data('pjax-container')
+            || PJAX_ROOT_CONTAINER_NAME;
     }
 
     function findTargetContainer(target) {
@@ -363,12 +326,12 @@
         return selector.match(/^\[data-pjax-container="(.+?)"\]$/)[1];
     }
 
-    $.fn.serializeMultipart = function() {
+    $.fn.serializeMultipart = function () {
         var obj = $(this);
         /* ADD FILE TO PARAM AJAX */
         var formData = new FormData();
-        $.each($(obj).find("input[type='file']"), function(i, tag) {
-            $.each($(tag)[0].files, function(i, file) {
+        $.each($(obj).find("input[type='file']"), function (i, tag) {
+            $.each($(tag)[0].files, function (i, file) {
                 formData.append(tag.name, file);
             });
         });
