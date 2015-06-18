@@ -2,10 +2,10 @@
     'use strict';
     var PJAX_FLASH = 'pjax-flashes';
     var PJAX_FLASH_SELECTOR = '[data-' + PJAX_FLASH + ']';
-    var PJAX_FLASH_CONTAINER = '.notification-container';
+
 
     _.extend(app, {
-
+        PJAX_FLASH_CONTAINER: '.notification-container',
         MESSAGE_SUCCESS: 0,
         MESSAGE_ERROR: 1,
         MESSAGE_WARNING: 2,
@@ -17,7 +17,7 @@
                 status = this.MESSAGE_SUCCESS;
             }
 
-            var msgbox = $('<div></div>').appendTo(PJAX_FLASH_CONTAINER);
+            var msgbox = $('<div></div>').appendTo(app.PJAX_FLASH_CONTAINER);
             msgbox.addClass('alert');
             msgbox.hide();
             msgbox.text(text);
@@ -47,7 +47,7 @@
         },
 
         clearMessage: function () {
-            $('.notification-container div').each(function () {
+            $(app.PJAX_FLASH_CONTAINER + ' > div').each(function () {
                 var time = $(this).data("time");
                 if (!time || (new Date() - time >= 5 * 1000)) {
                     $(this).fadeOut(1000, function () {
@@ -63,19 +63,18 @@
             app.clearMessage();
         })
         .on('pjax:error', function () {
-            app.message('Произошла ошибка', app.MESSAGE_ERROR);
+            app.message('Error', app.MESSAGE_ERROR);
         })
-        .on('pjax:success', function (event, content, options) {
-            var flashes = $(document).find(PJAX_FLASH_SELECTOR);
+        .on('pjax:complete', function (event, content, status, options) {
+            var flashes = $(event.target).find(PJAX_FLASH_SELECTOR);
             if (flashes) {
                 var flashData = flashes.data(PJAX_FLASH);
                 if (flashData) {
-                    $(PJAX_FLASH_CONTAINER).html(flashData);
+                    $(app.PJAX_FLASH_CONTAINER).html(flashData);
                 }
                 flashes.removeData(PJAX_FLASH);
                 flashes.removeAttr('data-' + PJAX_FLASH);
             }
-
         });
 
 })(jQuery, _, application, window);
