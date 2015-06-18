@@ -1,11 +1,11 @@
-(function ($, _, app, exports) {
+(function ($, _, app) {
     'use strict';
-    var PJAX_FLASH = 'pjax-flashes';
-    var PJAX_FLASH_SELECTOR = '[data-' + PJAX_FLASH + ']';
-
 
     _.extend(app, {
         PJAX_FLASH_CONTAINER: '.notification-container',
+        PJAX_FLASH: 'pjax-flashes',
+        PJAX_FLASH_SELECTOR: '[data-pjax-flashes]',
+
         MESSAGE_SUCCESS: 0,
         MESSAGE_ERROR: 1,
         MESSAGE_WARNING: 2,
@@ -66,15 +66,15 @@
             app.message('Error', app.MESSAGE_ERROR);
         })
         .on('pjax:complete', function (event, content, status, options) {
-            var flashes = $(event.target).find(PJAX_FLASH_SELECTOR);
+            var flashes = $(event.target).find(app.PJAX_FLASH_SELECTOR);
             if (flashes) {
-                var flashData = flashes.data(PJAX_FLASH);
+                var flashData = flashes.data(app.PJAX_FLASH);
                 if (flashData) {
                     $(app.PJAX_FLASH_CONTAINER).html(flashData);
                 }
-                flashes.removeData(PJAX_FLASH);
-                flashes.removeAttr('data-' + PJAX_FLASH);
+                flashes.removeData(app.PJAX_FLASH);
+                flashes.removeAttr('data-' + app.PJAX_FLASH);
             }
         });
 
-})(jQuery, _, application, window);
+})(jQuery, _, application);

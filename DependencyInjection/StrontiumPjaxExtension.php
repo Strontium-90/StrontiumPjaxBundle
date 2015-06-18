@@ -54,6 +54,8 @@ class StrontiumPjaxExtension extends Extension implements PrependExtensionInterf
                 'pjax' => array(
                     'input' => array(
                         '@StrontiumPjaxBundle/Resources/public/js/pjax.js',
+                        '@StrontiumPjaxBundle/Resources/public/js/modal.js',
+                        '@StrontiumPjaxBundle/Resources/public/js/flash.js',
                     ),
                 )
             )

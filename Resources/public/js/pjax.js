@@ -4,7 +4,7 @@
     var PJAX_ROOT_CONTAINER_NAME = 'main';
     var PJAX_REDIRECT_TARGET_PARAMETER = 'pjax-redirect-target';
 
-    var PJAX_MODAL = '#myModal'; // идентификатор модального окна
+     // идентификатор модального окна
     var PJAX_PUSH = 'pjax-push';
 
     var app = exports.application = {
@@ -17,7 +17,7 @@
         params: {},
 
         initializeDom: function (changesRoot) {
-            _.each(this.domInitializers, function (initFn) {
+           _.each(this.domInitializers, function (initFn) {
                 initFn(changesRoot);
             });
         },
@@ -89,21 +89,12 @@
     $(function () {
         app.initializeDom(document.documentElement);
 
-        $(PJAX_MODAL).on('hidden.bs.modal', function () {
-            $(this).find('.modal-content').html('');
-        });
-
         if ($.support.pjax) {
             initializePjax();
         }
     });
-
     function initializePjax() {
         $.pjax.defaults.timeout = 50000;
-
-        $(function () {
-            $('#myModal').on('pjax:send', onModalPjaxSend);
-        });
 
         $(document).on('click', app.linkSelector, onPjaxLinkClick);
         $(document).on('submit', app.formSelector, onPjaxFormSubmit);
@@ -111,13 +102,6 @@
 
         $(document).on('pjax:beforeSend', onPjaxBeforeSend);
         $(document).on('pjax:beforeReplace', onPjaxBeforeReplace);
-    }
-
-    function onModalPjaxSend(event, xhr, options) {
-        $('#myModal')
-            .modal('show')
-            .find('[data-pjax-container="modal"]')
-            .data(PJAX_REDIRECT_TARGET_PARAMETER, options.redirectTarget);
     }
 
     function onPjaxLinkClick(event) {
@@ -213,16 +197,6 @@
         if (target == undefined) {
             return;
         }
-
-        // надо ли закрывать модальное окно после завершения запроса?
-        var $modal = $(PJAX_MODAL),
-            closeModal;
-
-        closeModal = target.data('pjax-container') != "modal";
-        // закрываем модальное окно
-        if (closeModal) {
-            $modal.modal('hide');
-        }
     }
 
     function onPjaxComplete(event, content, status, options) {
@@ -232,17 +206,6 @@
                 $('title').text(title.data('title'));
             }
         }
-
-        /*var actions = $(event.target).find('[data-pjax-actions]');
-         if (actions) {
-         $('#actions').html(actions.data('pjax-actions'));
-         }*/
-
-        /*var breadcrumbs = $(event.target).find('[data-pjax-breadcrumbs]');
-         if (breadcrumbs) {
-         $('#breadcrumbs').html(actions.data('pjax-breadcrumbs'));
-         }*/
-
         app.initializeDom(event.target);
     }
 
@@ -330,13 +293,13 @@
         var obj = $(this);
         /* ADD FILE TO PARAM AJAX */
         var formData = new FormData();
-        $.each($(obj).find("input[type='file']"), function (i, tag) {
-            $.each($(tag)[0].files, function (i, file) {
+        _.each($(obj).find("input[type='file']"), function (i, tag) {
+            _.each($(tag)[0].files, function (i, file) {
                 formData.append(tag.name, file);
             });
         });
         var params = $(obj).serializeArray();
-        $.each(params, function (i, val) {
+        _.each(params, function (i, val) {
             formData.append(val.name, val.value);
         });
         return formData;
