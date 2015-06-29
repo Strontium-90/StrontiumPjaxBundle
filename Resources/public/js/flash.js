@@ -62,7 +62,7 @@
         .on('pjax:send', function () {
             app.clearMessage();
         })
-        .on('pjax:error', function (xhr, textStatus, error, options) {
+        .on('pjax:error', function (event, xhr, textStatus, error, options) {
             if ('abort' !== textStatus) {
                 app.message('Error', app.MESSAGE_ERROR);
             }
