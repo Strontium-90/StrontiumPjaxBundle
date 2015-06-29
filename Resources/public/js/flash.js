@@ -62,8 +62,10 @@
         .on('pjax:send', function () {
             app.clearMessage();
         })
-        .on('pjax:error', function () {
-            app.message('Error', app.MESSAGE_ERROR);
+        .on('pjax:error', function (xhr, textStatus, error, options) {
+            if ('abort' !== textStatus) {
+                app.message('Error', app.MESSAGE_ERROR);
+            }
         })
         .on('pjax:complete', function (event, content, status, options) {
             var flashes = $(event.target).find(app.PJAX_FLASH_SELECTOR);
