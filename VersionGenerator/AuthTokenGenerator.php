@@ -10,8 +10,7 @@ class AuthTokenGenerator implements VersionGeneratorInterface
     /**
      * @var TokenStorageInterface
      */
-    private $tokenStorage;
-
+    protected $tokenStorage;
 
     /**
      * @param TokenStorageInterface $tokenStorage

@@ -30,14 +30,14 @@
         }
     },
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.4",
         "symfony/framework-bundle": "~2.6",
         "symfony/twig-bundle": "~2.3",
 
         "components/jquery-pjax": "dev-master"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.2.0"
+        "phpunit/phpunit": "~4.2"
     },
     "suggest": {},
     "scripts": {},
@@ -45,31 +45,5 @@
         "branch-alias": {
             "dev-master": "0.2-dev"
         }
-    },
-    "repositories": [
-        {
-            "type": "package",
-            "package": {
-                "name": "components/jquery-pjax",
-                "type": "component",
-                "version": "dev-master",
-                "source": {
-                    "url": "https://github.com/AntonTyutin/jquery-pjax.git",
-                    "type": "git",
-                    "reference": "master"
-                },
-                "extra": {
-                    "name": "pjax",
-                    "component": {
-                        "scripts": [
-                            "./jquery.pjax.js"
-                        ]
-                    }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
-                }
-            }
-        }
-    ]
+    }
 }
