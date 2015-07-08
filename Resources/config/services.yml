@@ -15,8 +15,9 @@ services:
             - { name: twig.extension }
 
     pjax.version_generator.auth_token:
-        class:        %pjax.version_generator.auth_token.class%
-        arguments: [ "@security.context"]
+        class: %pjax.version_generator.auth_token.class%
+        arguments:
+            - @security.token_storage
 
     pjax.kernel.event_listener.response:
         class: %pjax.kernel.event_listener.response.class%

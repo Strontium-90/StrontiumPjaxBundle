@@ -1,27 +1,24 @@
 <?php
 namespace Strontium\PjaxBundle\VersionGenerator;
 
-use Travian\Bundle\Entity\Server;
-use Application\Sonata\UserBundle\Entity\Group;
 use Symfony\Component\HttpFoundation\Request;
-
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AuthTokenGenerator implements VersionGeneratorInterface
 {
 
     /**
-     * @var SecurityContextInterface
+     * @var TokenStorageInterface
      */
-    protected $securityContext;
+    private $tokenStorage;
+
 
     /**
-     * @param SecurityContextInterface $securityContext
-     *
+     * @param TokenStorageInterface $tokenStorage
      */
-    function __construct(SecurityContextInterface $securityContext)
+    public function __construct(TokenStorageInterface $tokenStorage)
     {
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -29,12 +26,10 @@ class AuthTokenGenerator implements VersionGeneratorInterface
      */
     public function generate(Request $request)
     {
-        $user = $this->securityContext->getToken()->getUser();
-
-
+        $user = $this->tokenStorage->getToken()->getUser();
         $version = sprintf(
             'u:%s',
-            $this->securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') ? $user->getId() : $user
+            is_string($user) ? $user : $user->getId()
         );
 
         return $version;
