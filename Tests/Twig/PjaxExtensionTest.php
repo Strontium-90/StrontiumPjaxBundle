@@ -17,10 +17,15 @@ class PjaxExtensionTest extends \Twig_Test_IntegrationTestCase
             ->method('generate')
             ->will($this->onConsecutiveCalls(1, 2, null, 3));
 
+        $requestStack = $this
+            ->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $pjax->setVersionGenerator($generator);
 
         return array(
-            new PjaxExtension($pjax),
+            new PjaxExtension($pjax, $requestStack),
         );
     }
 
