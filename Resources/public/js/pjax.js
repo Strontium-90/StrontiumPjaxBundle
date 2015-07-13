@@ -1,6 +1,6 @@
 (function ($, _, cookie, exports) {
     'use strict';
-    
+
     var PJAX_PUSH = 'pjax-push';
 
     var app = exports.application = {
@@ -16,7 +16,7 @@
         params: {},
 
         initializeDom: function (changesRoot) {
-           _.each(this.domInitializers, function (initFn) {
+            _.each(this.domInitializers, function (initFn) {
                 initFn(changesRoot);
             });
         },
@@ -60,24 +60,19 @@
         }
     };
 
-
     $(function () {
         app.initializeDom(document.documentElement);
         if ($.support.pjax) {
-            initializePjax();
+            $.pjax.defaults.timeout = 50000;
+
+            $(document)
+                .on('click', app.linkSelector, onPjaxLinkClick)
+                .on('submit', app.formSelector, onPjaxFormSubmit)
+                .on('pjax:complete', onPjaxComplete)
+                .on('pjax:beforeSend', onPjaxBeforeSend)
+                .on('pjax:beforeReplace', onPjaxBeforeReplace);
         }
     });
-
-    function initializePjax() {
-        $.pjax.defaults.timeout = 50000;
-
-        $(document).on('click', app.linkSelector, onPjaxLinkClick);
-        $(document).on('submit', app.formSelector, onPjaxFormSubmit);
-        $(document).on('pjax:complete', onPjaxComplete);
-
-        $(document).on('pjax:beforeSend', onPjaxBeforeSend);
-        $(document).on('pjax:beforeReplace', onPjaxBeforeReplace);
-    }
 
     function onPjaxLinkClick(event) {
         if (event.isDefaultPrevented()) {
@@ -155,7 +150,7 @@
 
         return option;
     }
-    
+
 
     function onPjaxComplete(event, content, status, options) {
         if (options.push) {

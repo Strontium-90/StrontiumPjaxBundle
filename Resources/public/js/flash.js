@@ -1,4 +1,4 @@
-(function ($, _, app) {
+(function ($, app) {
     'use strict';
 
     _.extend(app, {
@@ -59,9 +59,7 @@
     });
 
     $(document)
-        .on('pjax:send', function () {
-            app.clearMessage();
-        })
+        .on('pjax:send', app.clearMessage)
         .on('pjax:error', function (event, xhr, textStatus, error, options) {
             if ('abort' !== textStatus) {
                 app.message('Error', app.MESSAGE_ERROR);
@@ -79,4 +77,4 @@
             }
         });
 
-})(jQuery, _, application);
+})(jQuery, application);

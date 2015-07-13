@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, app) {
     'use strict';
 
     $(document)
@@ -30,4 +30,4 @@
     function showSubmitIndicators(event) {
         $form.find('button[data-loading-text]').button('loading');
     }
-})(jQuery);
+})(jQuery, application);
