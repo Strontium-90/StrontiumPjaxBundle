@@ -10,7 +10,7 @@
     function showLoadingIndicators(event) {
         var target = $(event.target).data('pjax-container');
 
-        if (target == 'main') {
+        if (target == app.ROOT_CONTAINER_NAME) {
             $('#ajax-loading').fadeIn(1000);
         } else {
             var loading = $('<div class="contentLoading"><div class="img"></div></div>');

@@ -1,13 +1,12 @@
 (function ($, _, cookie, exports) {
     'use strict';
-
-    var PJAX_ROOT_CONTAINER_NAME = 'main';
-    var PJAX_REDIRECT_TARGET_PARAMETER = 'pjax-redirect-target';
-
-     // идентификатор модального окна
+    
     var PJAX_PUSH = 'pjax-push';
 
     var app = exports.application = {
+        PJAX_REDIRECT_TARGET_PARAMETER: 'pjax-redirect-target',
+        ROOT_CONTAINER_NAME: 'main',
+
         linkSelector: 'a[data-pjax],' +
         'a:not([data-toggle]):not([data-behavior]):not([data-skip-pjax]):not([href^="http://"]):not([href^="/_profiler/"])',
 
@@ -40,7 +39,7 @@
         },
 
         getPjaxContainer: function (target) {
-            return findTargetContainer(target || PJAX_ROOT_CONTAINER_NAME);
+            return findTargetContainer(target || app.ROOT_CONTAINER_NAME);
         },
 
         getUrl: function (url, target) {
@@ -110,9 +109,7 @@
         }
         var target = findPjaxTargetFor(this);
         var container = findTargetContainer(target);
-        var redirectTarget = $(this).data(PJAX_REDIRECT_TARGET_PARAMETER);
-
-        processSubmit($(this), container, event);
+        var redirectTarget = $(this).data(app.PJAX_REDIRECT_TARGET_PARAMETER);
 
         $.pjax.click(event, container, {
             target: target,
@@ -129,9 +126,6 @@
         var $form = $(this);
         var target = findPjaxTargetFor(this);
         var targetContainer = findTargetContainer(target);
-
-        processSubmit($form, targetContainer, event);
-
         /**
          * Если пытаемся отправить форму с файлами,
          * но браузером не поддерживается FormData,
@@ -148,7 +142,7 @@
 
         var params = {
             target: target,
-            redirectTarget: targetContainer.data(PJAX_REDIRECT_TARGET_PARAMETER),
+            redirectTarget: targetContainer.data(app.PJAX_REDIRECT_TARGET_PARAMETER),
             push: toPush(target, $form.attr('method'), $(this).data(PJAX_PUSH)),
             replace: false
         };
@@ -180,24 +174,12 @@
             }
             method = method.toUpperCase();
 
-            return method == 'GET' && target == PJAX_ROOT_CONTAINER_NAME;
+            return method == 'GET' && target == app.ROOT_CONTAINER_NAME;
         }
 
         return option;
     }
-
-
-    /**
-     * Дополнительная обработка pjax-запроса
-     *
-     * @param $element - pjax-элемент (form или a.href)
-     * @param target - pjax-контейнер, куда будем пихать ответ
-     */
-    function processSubmit($element, target, event) {
-        if (target == undefined) {
-            return;
-        }
-    }
+    
 
     function onPjaxComplete(event, content, status, options) {
         if (options.push) {
@@ -266,7 +248,7 @@
 
         return $elem.data('pjax')
             || $elem.closest('[data-pjax-container]').data('pjax-container')
-            || PJAX_ROOT_CONTAINER_NAME;
+            || app.ROOT_CONTAINER_NAME;
     }
 
     function findTargetContainer(target) {
