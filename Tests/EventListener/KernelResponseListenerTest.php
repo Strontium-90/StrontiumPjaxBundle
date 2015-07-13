@@ -31,5 +31,12 @@ class KernelResponseListenerTest extends ProphecyTestCase
 
     public function test_it_should_add_pjax_version_to_response()
     {
+        $event = $this->prophesize('Symfony\Component\HttpKernel\Event\FilterResponseEvent');
+        $response = $this->prophesize('Symfony\Component\HttpFoundation\Response');
+
+        $event->getResponse()->willReturn($response);
+        //$response->
+
+        $this->listener->addPjaxVersion($event->reveal());
     }
 }
