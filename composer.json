@@ -73,6 +73,6 @@
                     "robloach/component-installer": "*"
                 }
             }
-        },
+        }
     ]
 }
