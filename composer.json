@@ -48,5 +48,31 @@
         "branch-alias": {
             "dev-master": "0.2-dev"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "components/jquery-pjax",
+                "type": "component",
+                "version": "dev-master",
+                "source": {
+                    "url": "https://github.com/Strontium-90/jquery-pjax.git",
+                    "type": "git",
+                    "reference": "master"
+                },
+                "extra": {
+                    "name": "pjax",
+                    "component": {
+                        "scripts": [
+                            "./jquery.pjax.js"
+                        ]
+                    }
+                },
+                "require": {
+                    "robloach/component-installer": "*"
+                }
+            }
+        },
+    ]
 }
