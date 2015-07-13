@@ -44,54 +44,30 @@
 
         getUrl: function (url, target) {
             var container = this.getPjaxContainer(target);
-            var url = url || '';
+            url = url || '';
 
             return $.pjax({
                 url: url,
                 container: container,
                 method: 'get',
-                push: false,
+                push: toPush(target, 'GET'),
                 replace: false
             });
         },
 
         reload: function (target, url) {
             return this.getUrl(url, target);
-        },
-
-
-        /**
-         * Генерируем события приложения
-         * @param eventName
-         * @param params
-         */
-        trigger: function (eventName, params) {
-            window.dispatchEvent(new CustomEvent(eventName, {detail: params}));
-        },
-
-        /**
-         * Одноразовая обработка события (после удаляем обработчик)
-         * @param context
-         * @param eventName
-         * @param cb
-         */
-        listenOnce: function (context, eventName, cb) {
-            // IE >= 9
-            window.addEventListener(eventName, function (event) {
-                cb.call(context, event);
-                window.removeEventListener(eventName, cb);
-            });
         }
     };
 
 
     $(function () {
         app.initializeDom(document.documentElement);
-
         if ($.support.pjax) {
             initializePjax();
         }
     });
+
     function initializePjax() {
         $.pjax.defaults.timeout = 50000;
 

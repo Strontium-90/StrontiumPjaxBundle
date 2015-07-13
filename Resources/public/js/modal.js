@@ -2,7 +2,7 @@
     'use strict';
 
     _.extend(app, {
-        PJAX_MODAL_SELECTOR: '#myModal',
+        PJAX_MODAL_SELECTOR: '#pjaxModal',
         PJAX_MODAL_CONTAINER: 'modal'
     });
 
