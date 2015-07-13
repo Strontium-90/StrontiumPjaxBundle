@@ -31,8 +31,7 @@
     {% javascripts filter='?yui_js' output='js/app.js'
     '@StrontiumPjaxBundle/Resources/public/js/pjax.js'
     '@StrontiumPjaxBundle/Resources/public/js/flashes.js'
-    '@AcmeTestBundle/Resources/public/js/application.js'
-    %}
+    '@AcmeTestBundle/Resources/public/js/application.js' %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
@@ -44,19 +43,53 @@
     <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
 
+    {% block javascripts %}{% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
 </head>
 <body>
-<div class="panel panel-default">
-    <div class="panel-heading"><a href="{{ path('acme_test_default_index') }}">index</a> | <a
-                href="{{ path('acme_test_default_foo') }}">foo</a> | <a
-                href="{{ path('acme_test_default_bar') }}">bar</a> | <a {{ pjax_attr('modal')|to_attr }}
-                href="{{ path('acme_test_default_bar') }}">modal bar</a></div>
-    <div class="panel-body" data-pjax-container="main">
-        {% block content %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+
+<!-- Static navbar -->
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Project name</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="{{ path('acme_test_default_index') }}">Home</a></li>
+                <li><a href="{{ path('acme_test_default_foo') }}">About</a></li>
+                <li><a href="{{ path('acme_test_default_bar') }}">Contact</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Dropdown <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ path('acme_test_default_bar') }}">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li class="dropdown-header">Nav header</li>
+                        <li><a href="#">Separated link</a></li>
+                        <li><a href="#">One more separated link</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!--/.nav-collapse -->
     </div>
+</nav>
+
+
+<div class="container" data-pjax-container="main">
+    {% block content %}{% endblock %}
 </div>
+
 {% include 'StrontiumPjaxBundle:Modal:pjax_modal.html.twig' %}
 </body>
 </html>
