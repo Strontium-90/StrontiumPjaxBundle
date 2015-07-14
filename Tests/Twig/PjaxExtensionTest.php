@@ -1,14 +1,14 @@
 <?php
 namespace Strontium\PjaxBundle\Tests\Twig;
 
-use Strontium\PjaxBundle\Pjax;
+use Strontium\PjaxBundle\Helper\PjaxHelper;
 use Strontium\PjaxBundle\Twig\PjaxExtension;
 
 class PjaxExtensionTest extends \Twig_Test_IntegrationTestCase
 {
     public function getExtensions()
     {
-        $pjax = new Pjax();
+        $pjax = new PjaxHelper();
         $generator = $this
             ->getMockBuilder('Strontium\PjaxBundle\VersionGenerator\AuthTokenGenerator')
             ->disableOriginalConstructor()

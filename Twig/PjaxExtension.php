@@ -1,7 +1,7 @@
 <?php
 namespace Strontium\PjaxBundle\Twig;
 
-use Strontium\PjaxBundle\PjaxInterface;
+use Strontium\PjaxBundle\Helper\PjaxHelperInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -9,7 +9,7 @@ class PjaxExtension extends \Twig_Extension
 {
 
     /**
-     * @var PjaxInterface
+     * @var PjaxHelperInterface
      */
     protected $pjax;
 
@@ -34,10 +34,10 @@ class PjaxExtension extends \Twig_Extension
     protected $requestStack;
 
     /**
-     * @param PjaxInterface $pjax
+     * @param PjaxHelperInterface $pjax
      * @param RequestStack  $requestStack
      */
-    public function __construct(PjaxInterface $pjax, RequestStack $requestStack)
+    public function __construct(PjaxHelperInterface $pjax, RequestStack $requestStack)
     {
         $this->pjax = $pjax;
         $this->requestStack = $requestStack;

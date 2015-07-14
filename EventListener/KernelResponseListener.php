@@ -1,7 +1,7 @@
 <?php
 namespace Strontium\PjaxBundle\EventListener;
 
-use Strontium\PjaxBundle\PjaxInterface;
+use Strontium\PjaxBundle\Helper\PjaxHelperInterface;
 use Strontium\PjaxBundle\VersionGenerator\VersionGeneratorInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,14 +10,14 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 class KernelResponseListener
 {
     /**
-     * @var PjaxInterface
+     * @var PjaxHelperInterface
      */
     protected $pjax;
 
     /**
-     * @param PjaxInterface $pjax
+     * @param PjaxHelperInterface $pjax
      */
-    public function __construct(PjaxInterface $pjax)
+    public function __construct(PjaxHelperInterface $pjax)
     {
         $this->pjax = $pjax;
     }

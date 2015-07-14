@@ -1,16 +1,19 @@
 parameters:
-    pjax.class: Strontium\PjaxBundle\Pjax
+    pjax.helper.class: Strontium\PjaxBundle\Helper\PjaxHelper
     pjax.twig.extension.class: Strontium\PjaxBundle\Twig\PjaxExtension
     pjax.kernel.event_listener.response.class: Strontium\PjaxBundle\EventListener\KernelResponseListener
     pjax.version_generator.auth_token.class: Strontium\PjaxBundle\VersionGenerator\AuthTokenGenerator
 
 services:
+    pjax.helper:
+        class: %pjax.helper.class%
+
     pjax:
-        class: %pjax.class%
+        alias: pjax.helper
 
     pjax.twig.extension:
         class:  %pjax.twig.extension.class%
-        arguments: [ @pjax, @request_stack ]
+        arguments: [ @pjax.helper, @request_stack ]
         tags:
             - { name: twig.extension }
 
@@ -21,6 +24,6 @@ services:
 
     pjax.kernel.event_listener.response:
         class: %pjax.kernel.event_listener.response.class%
-        arguments: [ @pjax ]
+        arguments: [ @pjax.helper ]
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: pjaxRedirect }

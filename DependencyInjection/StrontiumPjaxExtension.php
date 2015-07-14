@@ -32,7 +32,7 @@ class StrontiumPjaxExtension extends Extension implements PrependExtensionInterf
 
         if ($config['add_content_version'] === true && $config['version_generator']) {
             $container
-                ->getDefinition('pjax')
+                ->getDefinition('pjax.helper')
                 ->addMethodCall('setVersionGenerator', [new Reference($config['version_generator'])]);
 
             $container

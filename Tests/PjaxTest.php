@@ -1,7 +1,7 @@
 <?php
 namespace Strontium\PjaxBundle\Tests;
 
-use Strontium\PjaxBundle\Pjax;
+use Strontium\PjaxBundle\Helper\PjaxHelper;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -12,7 +12,7 @@ class PjaxTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsPjaxRequest($isPjax, array $headers)
     {
-        $pjax = new Pjax();
+        $pjax = new PjaxHelper();
 
 
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request', array());

@@ -1,9 +1,9 @@
 <?php
-namespace Strontium\PjaxBundle;
+namespace Strontium\PjaxBundle\Helper;
 
 use Symfony\Component\HttpFoundation\Request;
 
-interface PjaxInterface
+interface PjaxHelperInterface
 {
     /**
      * Was current Request made by PJAX?

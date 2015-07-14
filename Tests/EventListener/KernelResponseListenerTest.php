@@ -4,12 +4,12 @@ namespace Strontium\PjaxBundle\Tests\EventListener;
 use Prophecy\PhpUnit\ProphecyTestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Strontium\PjaxBundle\EventListener\KernelResponseListener;
-use Strontium\PjaxBundle\PjaxInterface;
+use Strontium\PjaxBundle\Helper\PjaxHelperInterface;
 
 class KernelResponseListenerTest extends ProphecyTestCase
 {
     /**
-     * @var PjaxInterface|ObjectProphecy
+     * @var PjaxHelperInterface|ObjectProphecy
      */
     protected $pjax;
 

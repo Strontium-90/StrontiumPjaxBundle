@@ -1,10 +1,10 @@
 <?php
-namespace Strontium\PjaxBundle;
+namespace Strontium\PjaxBundle\Helper;
 
 use Strontium\PjaxBundle\VersionGenerator\VersionGeneratorInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class Pjax implements PjaxInterface
+class PjaxHelper implements PjaxHelperInterface
 {
     /**
      * @var VersionGeneratorInterface

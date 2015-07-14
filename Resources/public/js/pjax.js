@@ -97,20 +97,18 @@
         var $form = $(this);
         var target = findPjaxTargetFor(this);
         var targetContainer = findTargetContainer(target);
+
         /**
          * Если пытаемся отправить форму с файлами,
          * но браузером не поддерживается FormData,
          * тогда просто штатно отправляем форму.
          * Пока так.
          */
-        if ($form.attr('')
-            && window.FormData != undeifned
-            && $.fn.serializeMultipart != undefined) {
+        if ('multipart/form-data' === $form.attr('enctype') && $.fn.serializeMultipart != undefined) {
             event.stopPropagation();
             $form.submit();
             return;
         }
-
         var params = {
             target: target,
             redirectTarget: targetContainer.data(app.PJAX_REDIRECT_TARGET_PARAMETER),
@@ -205,6 +203,10 @@
                     url: redirectedTo
                 }, generateStateParams(options));
                 window.history.pushState(event.state, event.state.title, event.state.url);
+            }
+
+            if (redirectTarget && redirectTarget != app.PJAX_MODAL_CONTAINER) {
+                $(app.PJAX_MODAL_SELECTOR).modal('hide');
             }
         }
     }

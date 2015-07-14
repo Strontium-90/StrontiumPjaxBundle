@@ -25,7 +25,8 @@ class AuthTokenGenerator implements VersionGeneratorInterface
      */
     public function generate(Request $request)
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $token = $this->tokenStorage->getToken();
+        $user = null === $token ? 'anon.' : $token->getUser();
         $version = sprintf(
             'u:%s',
             is_string($user) ? $user : $user->getId()
