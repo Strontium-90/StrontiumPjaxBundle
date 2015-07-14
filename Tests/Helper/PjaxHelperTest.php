@@ -1,11 +1,11 @@
 <?php
-namespace Strontium\PjaxBundle\Tests;
+namespace Strontium\PjaxBundle\Tests\Helper;
 
 use Strontium\PjaxBundle\Helper\PjaxHelper;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 
-class PjaxTest extends \PHPUnit_Framework_TestCase
+class PjaxHelperTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider headersProvider

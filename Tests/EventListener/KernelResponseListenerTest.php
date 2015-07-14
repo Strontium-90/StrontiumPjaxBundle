@@ -5,6 +5,7 @@ use Prophecy\PhpUnit\ProphecyTestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Strontium\PjaxBundle\EventListener\KernelResponseListener;
 use Strontium\PjaxBundle\Helper\PjaxHelperInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 class KernelResponseListenerTest extends ProphecyTestCase
 {
@@ -24,7 +25,7 @@ class KernelResponseListenerTest extends ProphecyTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->pjax = $this->prophesize('\Strontium\PjaxBundle\PjaxInterface');
+        $this->pjax = $this->prophesize('\Strontium\PjaxBundle\Helper\PjaxHelperInterface');
         $this->listener = new KernelResponseListener($this->pjax->reveal());
     }
 
@@ -33,9 +34,18 @@ class KernelResponseListenerTest extends ProphecyTestCase
     {
         $event = $this->prophesize('Symfony\Component\HttpKernel\Event\FilterResponseEvent');
         $response = $this->prophesize('Symfony\Component\HttpFoundation\Response');
+        $request = $this->prophesize('\Symfony\Component\HttpFoundation\Request');
+        $headers = $this->prophesize('\Symfony\Component\HttpFoundation\ParameterBag');
+        $response->headers = $headers->reveal();
 
-        $event->getResponse()->willReturn($response);
-        //$response->
+        $event->getRequest()->willReturn($request->reveal());
+        $event->getResponse()->willReturn($response->reveal());
+
+        $this->pjax->isPjaxRequest($request->reveal())->willReturn(true);
+        $this->pjax->haveGenerator()->willReturn(true);
+
+        $this->pjax->generateVersion($request)->willReturn('version');
+        $headers->set('X-PJAX-Version', 'version')->shouldBeCalled();
 
         $this->listener->addPjaxVersion($event->reveal());
     }
