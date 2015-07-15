@@ -212,10 +212,10 @@ class PjaxExtension extends \Twig_Extension
     public function generatePjaxAttributes($target = null, $redirectTarget = null)
     {
         $attributes = [];
-        if ($target) {
+        if (null !== $target) {
             $attributes['data-pjax'] = (string)$target;
         }
-        if ($redirectTarget) {
+        if (null !== $redirectTarget) {
             $attributes['data-pjax-redirect-target'] = (string)$redirectTarget;
         }
 
