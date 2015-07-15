@@ -1,0 +1,18 @@
+checks:
+    php:
+        uppercase_constants: true
+        use_self_instead_of_fqcn: true
+        simplify_boolean_return: true
+        return_doc_comments: true
+        remove_extra_empty_lines: true
+        line_length:
+            max_length: '120'
+    javascript: ~
+filter:
+    excluded_paths:
+        - Tests/*
+coding_style:
+    php:
+        spaces:
+            other:
+                after_type_cast: false
