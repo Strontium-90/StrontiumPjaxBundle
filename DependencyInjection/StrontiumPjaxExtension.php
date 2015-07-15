@@ -25,10 +25,11 @@ class StrontiumPjaxExtension extends Extension implements PrependExtensionInterf
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $container->getDefinition('pjax.twig.extension')
-                  ->addMethodCall('setLayouts', [$config['layouts']])
-                  ->addMethodCall('setFrames', [$config['frames']])
-                  ->addMethodCall('setDefaultFrame', [$config['default_frame']]);
+        $container
+            ->getDefinition('pjax.twig.extension')
+            ->addMethodCall('setLayouts', [$config['layouts']])
+            ->addMethodCall('setFrames', [$config['frames']])
+            ->addMethodCall('setDefaultFrame', [$config['default_frame']]);
 
         if ($config['add_content_version'] === true && $config['version_generator']) {
             $container
@@ -52,7 +53,7 @@ class StrontiumPjaxExtension extends Extension implements PrependExtensionInterf
         $container->prependExtensionConfig('assetic', array(
             'assets' => array(
                 'pjax' => array(
-                    'input' => array(
+                    'input'   => array(
                         '@StrontiumPjaxBundle/Resources/public/js/pjax.js',
                         '@StrontiumPjaxBundle/Resources/public/js/modal.js',
                         '@StrontiumPjaxBundle/Resources/public/js/flash.js',
