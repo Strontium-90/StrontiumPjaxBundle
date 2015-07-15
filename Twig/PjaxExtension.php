@@ -26,7 +26,7 @@ class PjaxExtension extends \Twig_Extension
     /**
      * @var string
      */
-    protected $defaultLayout;
+    protected $defaultFrame;
 
     /**
      * @var RequestStack
@@ -71,39 +71,36 @@ class PjaxExtension extends \Twig_Extension
     /**
      * @return string
      */
-    public function getFrame()
+    public function getFrame($frame = null)
     {
         $request = $this->requestStack->getCurrentRequest();
-        if ($this->pjax->isPjaxRequest($request) || null !== $this->requestStack->getParentRequest()) {
-            return $this->frames['pjax'];
+
+        if (null !== $frame) {
+            return $this->frames[$frame];
+        }
+        if ($this->pjax->isPjaxRequest($request)) {
+            $target = $this->pjax->getTarget($request);
+            if (isset($this->frames[$target])) {
+                return $this->frames[$target];
+            } else {
+                return $this->frames[$this->defaultFrame];
+            }
         }
 
-        return $this->frames['base'];
+        return $this->frames[$this->defaultFrame];
     }
 
     /**
      * @return string
      */
-    public function getLayout($layout = null)
+    public function getLayout()
     {
         $request = $this->requestStack->getCurrentRequest();
-
-        if (null !== $layout) {
-            return $this->layouts[$layout];
+        if ($this->pjax->isPjaxRequest($request) || null !== $this->requestStack->getParentRequest()) {
+            return $this->layouts['pjax'];
         }
-        if ($this->pjax->isPjaxRequest($request)) {
-            $target = $this->pjax->getTarget($request);
-            if (isset($this->layouts[$target])) {
-                return $this->layouts[$target];
-            } else {
-                return $this->layouts[$this->defaultLayout];
-            }
-        }
-        /*if ($layout = $request->query->get('_layout', $layout)) {
-            return $this->layouts[$layout];
-        }*/
 
-        return $this->layouts[$this->defaultLayout];
+        return $this->layouts['base'];
     }
 
     /**
@@ -131,13 +128,13 @@ class PjaxExtension extends \Twig_Extension
     }
 
     /**
-     * @param string $defaultLayout
+     * @param string $defaultFrame
      *
      * @return $this
      */
-    public function setDefaultLayout($defaultLayout)
+    public function setDefaultFrame($defaultFrame)
     {
-        $this->defaultLayout = $defaultLayout;
+        $this->defaultFrame = $defaultFrame;
 
         return $this;
     }
