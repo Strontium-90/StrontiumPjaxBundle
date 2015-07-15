@@ -69,7 +69,8 @@ class PjaxExtension extends \Twig_Extension
     }
 
     /**
-     * @return string
+     * @param string $frame
+     * @return mixed
      */
     public function getFrame($frame = null)
     {
@@ -96,7 +97,9 @@ class PjaxExtension extends \Twig_Extension
     public function getLayout()
     {
         $request = $this->requestStack->getCurrentRequest();
-        if ($this->pjax->isPjaxRequest($request) || null !== $this->requestStack->getParentRequest()) {
+        if (null !== $request && $this->pjax->isPjaxRequest($request)
+            || null !== $this->requestStack->getParentRequest()
+        ) {
             return $this->layouts['pjax'];
         }
 
