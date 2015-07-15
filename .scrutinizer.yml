@@ -1,5 +1,6 @@
 checks:
     php:
+        duplication: true
         uppercase_constants: true
         use_self_instead_of_fqcn: true
         simplify_boolean_return: true
