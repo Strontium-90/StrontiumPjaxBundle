@@ -97,7 +97,7 @@ class PjaxExtension extends \Twig_Extension
     public function getLayout()
     {
         $request = $this->requestStack->getCurrentRequest();
-        if (null !== $request && $this->pjax->isPjaxRequest($request)
+        if ((null !== $request && $this->pjax->isPjaxRequest($request))
             || null !== $this->requestStack->getParentRequest()
         ) {
             return $this->layouts['pjax'];
