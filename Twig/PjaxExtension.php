@@ -35,7 +35,7 @@ class PjaxExtension extends \Twig_Extension
 
     /**
      * @param PjaxHelperInterface $pjax
-     * @param RequestStack  $requestStack
+     * @param RequestStack        $requestStack
      */
     public function __construct(PjaxHelperInterface $pjax, RequestStack $requestStack)
     {
@@ -49,12 +49,12 @@ class PjaxExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'is_pjax'      => new \Twig_Function_Method($this, 'isPjax', ['is_safe' => ['html']]),
-            'pjax_attr'    => new \Twig_Function_Method($this, 'generatePjaxAttributes', ['is_safe' => ['html']]),
-            'pjax_version' => new \Twig_Function_Method($this, 'pjaxVersion', ['is_safe' => ['html']]),
-            'pjax_target'  => new \Twig_Function_Method($this, 'getPjaxTarget', ['is_safe' => ['html']]),
-            'pjax_layout'  => new \Twig_Function_Method($this, 'getLayout', ['is_safe' => ['html']]),
-            'pjax_frame'   => new \Twig_Function_Method($this, 'getFrame', ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('is_pjax', [$this, 'isPjax'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('pjax_attr', [$this, 'generatePjaxAttributes'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('pjax_version', [$this, 'pjaxVersion'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('pjax_target', [$this, 'getPjaxTarget'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('pjax_layout', [$this, 'getLayout'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('pjax_frame', [$this, 'getFrame'], ['is_safe' => ['html']]),
         );
     }
 
@@ -201,8 +201,8 @@ class PjaxExtension extends \Twig_Extension
     /**
      * Generate PJAX attributes
      *
-     * @param string  $target             data-pjax-container="$target" where content will load
-     * @param string  $redirectTarget     data-pjax-container="$redirectTarget" where content will load after redirect
+     * @param string $target         data-pjax-container="$target" where content will load
+     * @param string $redirectTarget data-pjax-container="$redirectTarget" where content will load after redirect
      *
      * @return array
      */
