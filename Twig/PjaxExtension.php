@@ -145,7 +145,7 @@ class PjaxExtension extends \Twig_Extension
     /**
      * @param Request $request
      *
-     * @return string
+     * @return string|null
      */
     public function pjaxVersion(Request $request)
     {

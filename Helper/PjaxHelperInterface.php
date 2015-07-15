@@ -17,7 +17,7 @@ interface PjaxHelperInterface
     /**
      * @param Request $request
      *
-     * @return string
+     * @return string|null
      */
     public function generateVersion(Request $request);
 
