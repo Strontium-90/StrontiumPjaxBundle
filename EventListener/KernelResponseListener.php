@@ -2,7 +2,6 @@
 namespace Strontium\PjaxBundle\EventListener;
 
 use Strontium\PjaxBundle\Helper\PjaxHelperInterface;
-use Strontium\PjaxBundle\VersionGenerator\VersionGeneratorInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
