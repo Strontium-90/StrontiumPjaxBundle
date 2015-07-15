@@ -231,7 +231,6 @@
     }
 
     function generatePjaxContainerSelector(name) {
-        // TODO сделать экранирование символов name для селектора
         return '[data-pjax-container="' + name + '"]';
     }
 
@@ -240,7 +239,6 @@
      * @returns {string}
      */
     function parsePjaxContainerSelector(selector) {
-        // TODO сделать разэкранирование символов извлеченного имени, если оно экранировано
         return selector.match(/^\[data-pjax-container="(.+?)"\]$/)[1];
     }
 
