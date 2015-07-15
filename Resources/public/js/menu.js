@@ -1,7 +1,7 @@
 (function ($, app) {
     'use strict';
 
-    _.extend(app, {
+    $.extend(app, {
         MENU_CURRENT_CLASS: 'active',
         MENU_ROOT_SELECTOR: '#report_nav'
     });

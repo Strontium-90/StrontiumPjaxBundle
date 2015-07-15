@@ -1,7 +1,7 @@
 (function ($, app) {
     'use strict';
 
-    _.extend(app, {
+    $.extend(app, {
         PJAX_MODAL_SELECTOR: '#pjaxModal',
         PJAX_MODAL_CONTAINER: 'modal'
     });

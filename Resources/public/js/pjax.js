@@ -1,4 +1,4 @@
-(function ($, _, cookie, exports) {
+(function ($, cookie, exports) {
     'use strict';
 
     var PJAX_PUSH = 'pjax-push';
@@ -16,7 +16,7 @@
         params: {},
 
         initializeDom: function (changesRoot) {
-            _.each(this.domInitializers, function (initFn) {
+            $.each(this.domInitializers, function (initFn) {
                 initFn(changesRoot);
             });
         },
@@ -117,7 +117,7 @@
         };
 
         if ($form.attr('enctype') === 'multipart/form-data') {
-            _.extend(params, {
+            $.extend(params, {
                 contentType: false,
                 processData: false,
                 cache: false,
@@ -171,7 +171,7 @@
         if (redirectTarget) {
             redirectCookieTargetName = parsePjaxContainerSelector(options.context.selector);
             optionsTransformer = function (options) {
-                return _.extend(options, {
+                return $.extend(options, {
                     context: findTargetContainer(redirectTarget)
                 });
             };
@@ -198,7 +198,7 @@
             options = optionsTransformer(options);
 
             if (toPush(redirectTarget, 'GET')) {
-                _.extend(event.state, {
+                $.extend(event.state, {
                     push: true,
                     url: redirectedTo
                 }, generateStateParams(options));
@@ -248,16 +248,16 @@
         var obj = $(this);
         /* ADD FILE TO PARAM AJAX */
         var formData = new FormData();
-        _.each($(obj).find("input[type='file']"), function (i, tag) {
-            _.each($(tag)[0].files, function (i, file) {
+        $.each($(obj).find("input[type='file']"), function (i, tag) {
+            $.each($(tag)[0].files, function (i, file) {
                 formData.append(tag.name, file);
             });
         });
         var params = $(obj).serializeArray();
-        _.each(params, function (i, val) {
+        $.each(params, function (i, val) {
             formData.append(val.name, val.value);
         });
         return formData;
     };
 
-})(jQuery, _, Cookies, window);
+})(jQuery, Cookies, window);

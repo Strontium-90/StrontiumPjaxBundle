@@ -1,7 +1,7 @@
 (function ($, app) {
     'use strict';
 
-    _.extend(app, {
+    $.extend(app, {
         PJAX_FLASH_CONTAINER: '.notification-container',
         PJAX_FLASH: 'pjax-flashes',
         PJAX_FLASH_SELECTOR: '[data-pjax-flashes]',
