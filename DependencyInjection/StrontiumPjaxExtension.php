@@ -58,7 +58,6 @@ class StrontiumPjaxExtension extends Extension implements PrependExtensionInterf
                         '@StrontiumPjaxBundle/Resources/public/js/modal.js',
                         '@StrontiumPjaxBundle/Resources/public/js/flash.js',
                     ),
-                    'filters' => array('?yui_js')
                 )
             )
         ));

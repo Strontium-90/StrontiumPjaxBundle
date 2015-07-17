@@ -205,7 +205,7 @@ class PjaxExtension extends \Twig_Extension
      * Generate PJAX attributes
      *
      * @param string $target         data-pjax-container="$target" where content will load
-     * @param string $redirectTarget data-pjax-container="$redirectTarget" where content will load after redirect
+     * @param string $redirectTarget data-pjax-redirect-target="$redirectTarget" where content will load after redirect
      *
      * @return array
      */
