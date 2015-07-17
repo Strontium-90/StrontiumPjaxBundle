@@ -32,17 +32,11 @@ class Configuration implements ConfigurationInterface
                     ->prototype('scalar')->end()
                 ->end()
                 ->arrayNode('layouts')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('base')
-                            ->defaultValue('StrontiumPjaxBundle::base.html.twig')
-                            ->cannotBeEmpty()
-                        ->end()
-                        ->scalarNode('pjax')
-                            ->defaultValue('StrontiumPjaxBundle::pjax.html.twig')
-                            ->cannotBeEmpty()
-                        ->end()
-                    ->end()
+                    ->defaultValue([
+                        'base' => 'StrontiumPjaxBundle::base.html.twig',
+                        'pjax'=>  'StrontiumPjaxBundle::pjax.html.twig'
+                    ])
+                    ->prototype('scalar')->end()
                 ->end()
             ->end();
 
