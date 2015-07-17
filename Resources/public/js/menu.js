@@ -8,23 +8,26 @@
     });
 
 
-    $(document).on('pjax:complete', function (event, content, status, options) {
-        if (!options.push) {
-            return;
-        }
-        var currentItems = $(event.target).find('[data-' + app.PJAX_MENU + ']');
-        if (currentItems) {
-            setCurrentMenuItem(currentItems.data(app.PJAX_MENU));
-        }
-    });
+    $(document)
+        .on('pjax:end', function (event, content, options) {
+            /*if (!options.push) {
+                return;
+            }*/
+            var currentItems = $(event.target).find('[data-' + app.PJAX_MENU + ']');
+            if (currentItems) {
+                var selectedLinks = currentItems.data(app.PJAX_MENU);
+                options.selectedLinks = selectedLinks;
+                setCurrentMenuItem(selectedLinks);
+            }
+        });
 
-    function setCurrentMenuItem(currentItems) {
+    function setCurrentMenuItem(selectedLinks) {
         $(app.MENU_ROOT_SELECTOR + ' li.' + app.MENU_CURRENT_CLASS).removeClass(app.MENU_CURRENT_CLASS);
-        if (!currentItems || !currentItems.length) {
+        if (!selectedLinks || !selectedLinks.length) {
             return;
         }
 
-        $(currentItems).each(function (key, currentItem) {
+        $(selectedLinks).each(function (key, currentItem) {
             $(app.MENU_ROOT_SELECTOR + ' li[data-name="' + currentItem + '"]')
                 .addClass(app.MENU_CURRENT_CLASS)
                 .parents(app.MENU_ROOT_SELECTOR + ' li').each(function () {

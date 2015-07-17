@@ -218,7 +218,7 @@
     }
 
     function onPjaxEnd(event, xhr, options) {
-        $('#pjax-head').remove();
+
     }
 
     function findPjaxTargetFor(elem) {
