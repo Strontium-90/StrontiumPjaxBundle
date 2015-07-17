@@ -37,7 +37,7 @@ class Configuration implements ConfigurationInterface
                     ])
                     ->prototype('scalar')->end()
                     ->validate()
-                        ->ifTrue(function($layouts){
+                        ->ifTrue(function($layouts) {
                             return !isset($layouts['pjax']);
                         })
                         ->thenInvalid('Layout "pjax" must be configured')
