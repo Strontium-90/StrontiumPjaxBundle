@@ -3,7 +3,6 @@ parameters:
     pjax.twig.extension.class: Strontium\PjaxBundle\Twig\PjaxExtension
     pjax.kernel.event_listener.response.class: Strontium\PjaxBundle\EventListener\KernelResponseListener
     pjax.version_generator.auth_token.class: Strontium\PjaxBundle\VersionGenerator\AuthTokenGenerator
-
 services:
     pjax.helper:
         class: %pjax.helper.class%

@@ -1,0 +1,10 @@
+parameters:
+    pjax.twig.extension.menu.class: Strontium\PjaxBundle\Twig\MenuExtension
+services:
+    pjax.twig.extension.menu:
+        class:  %pjax.twig.extension.menu.class%
+        arguments:
+            - @knp_menu.helper
+            - @knp_menu.matcher
+        tags:
+            - { name: twig.extension }

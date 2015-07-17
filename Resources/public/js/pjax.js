@@ -70,7 +70,8 @@
                 .on('submit', app.formSelector, onPjaxFormSubmit)
                 .on('pjax:complete', onPjaxComplete)
                 .on('pjax:beforeSend', onPjaxBeforeSend)
-                .on('pjax:beforeReplace', onPjaxBeforeReplace);
+                .on('pjax:beforeReplace', onPjaxBeforeReplace)
+                .on('pjax:end', onPjaxEnd);
         }
     });
 
@@ -151,12 +152,12 @@
 
 
     function onPjaxComplete(event, content, status, options) {
-        if (options.push) {
-            var title = $(event.target).find('[data-title]');
-            if (title) {
-                $('title').text(title.data('title'));
-            }
-        }
+        /*if (options.push) {
+         var title = $(event.target).find('[data-title]');
+         if (title) {
+         $('title').text(title.data('title'));
+         }
+         }*/
         app.initializeDom(event.target);
     }
 
@@ -214,6 +215,10 @@
     function onPjaxBeforeSend(event, xhr, settings) {
         xhr.setRequestHeader('X-PJAX-Target', settings.target);
         settings.redirectTarget && xhr.setRequestHeader('X-PJAX-Redirect-Target', settings.redirectTarget);
+    }
+
+    function onPjaxEnd(event, xhr, options) {
+        $('#pjax-head').remove();
     }
 
     function findPjaxTargetFor(elem) {

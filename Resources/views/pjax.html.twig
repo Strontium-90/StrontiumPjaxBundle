@@ -1,8 +1,9 @@
 {% spaceless %}
     {% from 'MopaBootstrapBundle::flash.html.twig' import session_flash %}
-    <div class="hidden" data-title="{{ block('title')|striptags }}"
+    <div class="hidden" id="pjax-head"
             {%- if app.session.flashbag.peekAll|length > 0 %} data-pjax-flashes="{{ session_flash(true)|escape }}"
-            {%- endif -%}>
+            {%- endif %} data-menu-current="{{ knp_menu_currents('main')|json_encode }}">
+        <title>{{ block('title') }}</title>
     </div>
     {% block content %}{% endblock %}
 {% endspaceless %}

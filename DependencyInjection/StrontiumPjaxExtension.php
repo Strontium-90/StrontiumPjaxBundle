@@ -19,8 +19,7 @@ class StrontiumPjaxExtension extends Extension implements PrependExtensionInterf
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
+        $config = $this->processConfiguration(new Configuration(), $configs);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
@@ -43,6 +42,9 @@ class StrontiumPjaxExtension extends Extension implements PrependExtensionInterf
                     'method' => 'addPjaxVersion'
                 ]);
         }
+        if ($config['menu']) {
+            $loader->load('menu.yml');
+        }
     }
 
     /**
@@ -50,14 +52,23 @@ class StrontiumPjaxExtension extends Extension implements PrependExtensionInterf
      */
     public function prepend(ContainerBuilder $container)
     {
+        $input = array(
+            '@StrontiumPjaxBundle/Resources/public/js/pjax.js',
+            '@StrontiumPjaxBundle/Resources/public/js/modal.js',
+            '@StrontiumPjaxBundle/Resources/public/js/flash.js',
+        );
+
+        $configs = $container->getExtensionConfig($this->getAlias());
+        $config = $this->processConfiguration(new Configuration(), $configs);
+        if ($config['menu']) {
+            $input[] = '@StrontiumPjaxBundle/Resources/public/js/menu.js';
+        }
+
+
         $container->prependExtensionConfig('assetic', array(
             'assets' => array(
                 'pjax' => array(
-                    'input'   => array(
-                        '@StrontiumPjaxBundle/Resources/public/js/pjax.js',
-                        '@StrontiumPjaxBundle/Resources/public/js/modal.js',
-                        '@StrontiumPjaxBundle/Resources/public/js/flash.js',
-                    ),
+                    'input' => $input,
                 )
             )
         ));

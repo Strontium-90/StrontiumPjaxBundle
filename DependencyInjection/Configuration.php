@@ -22,6 +22,7 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->booleanNode('add_content_version')->defaultValue(false)->end()
+                ->booleanNode('menu')->defaultValue(false)->end()
                 ->scalarNode('version_generator')->defaultValue('pjax.version_generator.auth_token')->end()
                 ->scalarNode('default_frame')
                     ->isRequired()
