@@ -94,7 +94,7 @@ class PjaxExtension extends \Twig_Extension
     /**
      * @return string
      */
-    public function getLayout()
+    public function getLayout($layout = 'base')
     {
         $request = $this->requestStack->getCurrentRequest();
         if ((null !== $request && $this->pjax->isPjaxRequest($request))
@@ -103,7 +103,7 @@ class PjaxExtension extends \Twig_Extension
             return $this->layouts['pjax'];
         }
 
-        return $this->layouts['base'];
+        return $this->layouts[$layout];
     }
 
     /**
