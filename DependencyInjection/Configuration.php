@@ -33,10 +33,15 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('layouts')
                     ->defaultValue([
-                        'base' => 'StrontiumPjaxBundle::base.html.twig',
-                        'pjax'=>  'StrontiumPjaxBundle::pjax.html.twig'
+                        'pjax'=>  'StrontiumPjaxBundle::pjax.html.twig',
                     ])
                     ->prototype('scalar')->end()
+                    ->validate()
+                        ->ifTrue(function($layouts){
+                            return !isset($layouts['pjax']);
+                        })
+                        ->thenInvalid('Layout "pjax" must be configured')
+                    ->end()
                 ->end()
             ->end();
 
