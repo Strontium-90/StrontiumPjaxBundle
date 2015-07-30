@@ -9,13 +9,7 @@ This bundle provide integration of [PJAX](https://github.com/defunkt/jquery-pjax
 Installation
 ------------
 
-``` json
-{
-    "require": {
-        "components/jquery-pjax": "*"
-    }
-}
-```
+`composer require strontium/pjax-bundle`
 
 To start using the bundle, register it in your Kernel:
 
