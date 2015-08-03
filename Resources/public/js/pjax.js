@@ -63,7 +63,7 @@
     $(function () {
         app.initializeDom(document.documentElement);
         if ($.support.pjax) {
-            $.pjax.defaults.timeout = 50000;
+            //$.pjax.defaults.timeout = 50000;
 
             $(document)
                 .on('click', app.linkSelector, onPjaxLinkClick)
