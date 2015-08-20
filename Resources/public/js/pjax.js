@@ -16,7 +16,7 @@
         params: {},
 
         initializeDom: function (changesRoot) {
-            $.each(this.domInitializers, function (initFn) {
+            $.each(this.domInitializers, function (i, initFn) {
                 initFn(changesRoot);
             });
         },
@@ -25,7 +25,7 @@
          * Добавление колбэка для инициализации добавляемых узлов DOM
          * @param {Function} initFn принимает на вход добавленный узел DOM
          */
-        registerDomInitializer: function (i, initFn) {
+        registerDomInitializer: function (initFn) {
             this.domInitializers.push(initFn);
         },
 
