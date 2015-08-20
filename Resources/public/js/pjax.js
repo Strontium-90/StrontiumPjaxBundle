@@ -25,7 +25,7 @@
          * Добавление колбэка для инициализации добавляемых узлов DOM
          * @param {Function} initFn принимает на вход добавленный узел DOM
          */
-        registerDomInitializer: function (initFn) {
+        registerDomInitializer: function (i, initFn) {
             this.domInitializers.push(initFn);
         },
 
