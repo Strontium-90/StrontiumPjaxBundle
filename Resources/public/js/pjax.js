@@ -8,7 +8,7 @@
         ROOT_CONTAINER_NAME: 'main',
 
         linkSelector: 'a[data-pjax],' +
-        'a:not([data-toggle]):not([data-behavior]):not([data-skip-pjax]):not([href^="http://"]):not([href^="/_profiler/"])',
+        'a:not([data-toggle]):not([data-behavior]):not([data-skip-pjax]):not([href^="http://"]):not([href^="/_profiler/"]):not([href^="/app_dev.php/_profiler/"])',
 
         formSelector: 'form:not([w]):not([data-skip-pjax])',
 
