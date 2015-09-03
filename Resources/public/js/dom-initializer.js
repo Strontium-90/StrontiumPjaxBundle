@@ -17,4 +17,8 @@
             this.initializers.push(initFn);
         }
     }
+
+    $(function () {
+        domInitializer.initialize(document.documentElement);
+    });
 })(jQuery, window);

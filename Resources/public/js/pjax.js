@@ -46,7 +46,6 @@
     };
 
     $(function () {
-        domInitializer.initialize(document.documentElement);
         if ($.support.pjax) {
             $.pjax.defaults.timeout = 50000;
 
