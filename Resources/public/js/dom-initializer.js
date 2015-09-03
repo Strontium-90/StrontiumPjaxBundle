@@ -12,9 +12,12 @@
         /**
          * Добавление колбэка для инициализации добавляемых узлов DOM
          * @param {Function} initFn принимает на вход добавленный узел DOM
+         * @return domInitializer
          */
         register: function (initFn) {
             this.initializers.push(initFn);
+
+            return this;
         }
     }
 
