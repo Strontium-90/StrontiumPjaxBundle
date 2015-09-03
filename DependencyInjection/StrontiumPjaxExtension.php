@@ -53,6 +53,7 @@ class StrontiumPjaxExtension extends Extension implements PrependExtensionInterf
     public function prepend(ContainerBuilder $container)
     {
         $input = array(
+            '@StrontiumPjaxBundle/Resources/public/js/dom-initializer.js',
             '@StrontiumPjaxBundle/Resources/public/js/pjax.js',
             '@StrontiumPjaxBundle/Resources/public/js/modal.js',
             '@StrontiumPjaxBundle/Resources/public/js/flash.js',

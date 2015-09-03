@@ -1,4 +1,4 @@
-(function ($, cookie, exports) {
+(function ($, cookie, exports, domInitializer) {
     'use strict';
 
     var PJAX_PUSH = 'pjax-push';
@@ -12,22 +12,7 @@
 
         formSelector: 'form:not([w]):not([data-skip-pjax])',
 
-        domInitializers: [],
         params: {},
-
-        initializeDom: function (changesRoot) {
-            $.each(this.domInitializers, function (i, initFn) {
-                initFn(changesRoot);
-            });
-        },
-
-        /**
-         * Добавление колбэка для инициализации добавляемых узлов DOM
-         * @param {Function} initFn принимает на вход добавленный узел DOM
-         */
-        registerDomInitializer: function (initFn) {
-            this.domInitializers.push(initFn);
-        },
 
         getPage: function (route, params, target) {
             var req_params = this.params;
@@ -61,7 +46,7 @@
     };
 
     $(function () {
-        app.initializeDom(document.documentElement);
+        domInitializer.initialize(document.documentElement);
         if ($.support.pjax) {
             $.pjax.defaults.timeout = 50000;
 
@@ -158,7 +143,7 @@
          $('title').text(title.data('title'));
          }
          }*/
-        app.initializeDom(event.target);
+        domInitializer.initialize(event.target);
     }
 
     function onPjaxBeforeReplace(event, contents, options) {
@@ -263,4 +248,4 @@
         return formData;
     };
 
-})(jQuery, Cookies, window);
+})(jQuery, Cookies, window, domInitializer);
