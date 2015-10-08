@@ -89,10 +89,8 @@
          * тогда просто штатно отправляем форму.
          * Пока так.
          */
-        if ('multipart/form-data' === $form.attr('enctype') && $.fn.serializeMultipart != undefined) {
-            event.stopPropagation();
-            $form.submit();
-            return;
+        if ('multipart/form-data' === $form.attr('enctype') && window.FormData != undeifned != undefined) {
+            return true;
         }
         var params = {
             target: target,
