@@ -89,7 +89,7 @@
          * тогда просто штатно отправляем форму.
          * Пока так.
          */
-        if ('multipart/form-data' === $form.attr('enctype') && window.FormData != undeifned != undefined) {
+        if ('multipart/form-data' === $form.attr('enctype') && window.FormData === undefined) {
             return true;
         }
         var params = {
