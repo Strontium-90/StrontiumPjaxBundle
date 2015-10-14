@@ -27,8 +27,9 @@ class KernelResponseListener
     public function addPjaxVersion(FilterResponseEvent $event)
     {
         $request = $event->getRequest();
-        if ($this->pjax->isPjaxRequest($request) && $this->pjax->haveGenerator()) {
-            $response = $event->getResponse();
+        $response = $event->getResponse();
+
+        if ($this->pjax->isPjaxRequest($request) && $this->pjax->haveGenerator() && !$response->isRedirect()) {
             $response->headers->set('X-PJAX-Version', $this->pjax->generateVersion($request));
         }
     }
