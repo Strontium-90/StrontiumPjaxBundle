@@ -43,34 +43,12 @@ class KernelResponseListenerTest extends ProphecyTestCase
 
         $this->pjax->isPjaxRequest($request->reveal())->willReturn(true);
         $this->pjax->haveGenerator()->willReturn(true);
-        $response->isRedirect()->willReturn(false);
 
         $this->pjax->generateVersion($request)->willReturn('version');
         $headers->set('X-PJAX-Version', 'version')->shouldBeCalled();
 
         $this->listener->addPjaxVersion($event->reveal());
     }
-
-    public function test_it_should_not_add_pjax_version_to_redirect_response()
-    {
-        $event = $this->prophesize('Symfony\Component\HttpKernel\Event\FilterResponseEvent');
-        $response = $this->prophesize('Symfony\Component\HttpFoundation\Response');
-        $request = $this->prophesize('\Symfony\Component\HttpFoundation\Request');
-        $headers = $this->prophesize('\Symfony\Component\HttpFoundation\ResponseHeaderBag');
-        $response->headers = $headers->reveal();
-
-        $event->getRequest()->willReturn($request->reveal());
-        $event->getResponse()->willReturn($response->reveal());
-
-        $this->pjax->isPjaxRequest($request->reveal())->willReturn(true);
-        $this->pjax->haveGenerator()->willReturn(true);
-        $response->isRedirect()->willReturn(true);
-
-        $headers->set('X-PJAX-Version', 'version')->shouldNotBeCalled();
-
-        $this->listener->addPjaxVersion($event->reveal());
-    }
-
 
     public function test_it_should_skip_if_its_not_pjax_redirect()
     {
