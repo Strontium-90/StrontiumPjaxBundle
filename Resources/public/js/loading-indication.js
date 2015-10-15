@@ -8,6 +8,9 @@
         .on('submit', showSubmitIndicators);
 
     function showLoadingIndicators(event) {
+        if (event.isDefaultPrevented()) {
+            return;
+        }
         var target = $(event.target).data('pjax-container');
 
         if (target == app.ROOT_CONTAINER_NAME) {
@@ -28,6 +31,9 @@
     }
 
     function showSubmitIndicators(event) {
+        if (event.isDefaultPrevented()) {
+            return;
+        }
         $form.find('button[data-loading-text]').button('loading');
     }
 })(jQuery, application);
