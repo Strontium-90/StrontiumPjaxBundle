@@ -31,9 +31,6 @@
     }
 
     function showSubmitIndicators(event) {
-        if (event.isDefaultPrevented()) {
-            return;
-        }
         $form.find('button[data-loading-text]').button('loading');
     }
 })(jQuery, application);
