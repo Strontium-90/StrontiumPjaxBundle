@@ -5,24 +5,27 @@ parameters:
     pjax.version_generator.auth_token.class: Strontium\PjaxBundle\VersionGenerator\AuthTokenGenerator
 services:
     pjax.helper:
-        class: %pjax.helper.class%
+        class: "%pjax.helper.class%"
 
     pjax:
         alias: pjax.helper
 
     pjax.twig.extension:
-        class:  %pjax.twig.extension.class%
-        arguments: [ @pjax.helper, @request_stack ]
+        class: "%pjax.twig.extension.class%"
+        arguments:
+            - "@pjax.helper"
+            - "@request_stack"
         tags:
             - { name: twig.extension }
 
     pjax.version_generator.auth_token:
-        class: %pjax.version_generator.auth_token.class%
+        class: "%pjax.version_generator.auth_token.class%"
         arguments:
-            - @security.token_storage
+            - "@security.token_storage"
 
     pjax.kernel.event_listener.response:
-        class: %pjax.kernel.event_listener.response.class%
-        arguments: [ @pjax.helper ]
+        class: "%pjax.kernel.event_listener.response.class%"
+        arguments:
+            - "@pjax.helper"
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: pjaxRedirect }
