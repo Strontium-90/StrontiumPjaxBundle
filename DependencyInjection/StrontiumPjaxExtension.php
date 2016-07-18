@@ -52,12 +52,12 @@ class StrontiumPjaxExtension extends Extension implements PrependExtensionInterf
      */
     public function prepend(ContainerBuilder $container)
     {
-        $input = array(
+        $input = [
             '@StrontiumPjaxBundle/Resources/public/js/dom-initializer.js',
             '@StrontiumPjaxBundle/Resources/public/js/pjax.js',
             '@StrontiumPjaxBundle/Resources/public/js/modal.js',
             '@StrontiumPjaxBundle/Resources/public/js/flash.js',
-        );
+        ];
 
         $configs = $container->getExtensionConfig($this->getAlias());
         $config = $this->processConfiguration(new Configuration(), $configs);
@@ -66,12 +66,12 @@ class StrontiumPjaxExtension extends Extension implements PrependExtensionInterf
         }
 
 
-        $container->prependExtensionConfig('assetic', array(
-            'assets' => array(
-                'pjax' => array(
+        $container->prependExtensionConfig('assetic', [
+            'assets' => [
+                'pjax' => [
                     'input' => $input,
-                )
-            )
-        ));
+                ]
+            ]
+        ]);
     }
 }

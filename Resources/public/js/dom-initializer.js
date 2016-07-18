@@ -10,8 +10,7 @@
         },
 
         /**
-         * Добавление колбэка для инициализации добавляемых узлов DOM
-         * @param {Function} initFn принимает на вход добавленный узел DOM
+         * @param {Function} initFn
          * @return domInitializer
          */
         register: function (initFn) {
