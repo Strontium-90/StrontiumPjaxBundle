@@ -26,9 +26,7 @@ class StrontiumPjaxExtension extends Extension implements PrependExtensionInterf
 
         $container
             ->getDefinition('pjax.twig.extension')
-            ->addMethodCall('setLayouts', [$config['layouts']])
-            ->addMethodCall('setFrames', [$config['frames']])
-            ->addMethodCall('setDefaultFrame', [$config['default_frame']]);
+            ->addMethodCall('setSections', [$config['sections']]);
 
         if ($config['add_content_version'] === true && $config['version_generator']) {
             $container
