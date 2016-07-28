@@ -187,7 +187,7 @@
                 }, generateStateParams(options));
                 window.history.pushState(event.state, event.state.title, event.state.url);
                 if (undefined !== app.processFlash){
-                    app.processFlash(event);
+                    app.processFlash(findTargetContainer(redirectTarget));
                 }
             }
 

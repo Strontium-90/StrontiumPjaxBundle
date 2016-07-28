@@ -57,8 +57,8 @@
             });
         },
 
-        processFlash: function(event, content, status, options){
-            var flashes = $(event.target).find(app.PJAX_FLASH_SELECTOR);
+        processFlash: function(target){
+            var flashes = $(target).find(app.PJAX_FLASH_SELECTOR);
             if (flashes) {
                 var flashData = flashes.data(app.PJAX_FLASH);
                 if (flashData) {
@@ -77,6 +77,8 @@
                 app.message('Error', app.MESSAGE_ERROR);
             }
         })
-        .on('pjax:complete', app.processFlash);
+        .on('pjax:complete', function(event){
+            app.processFlash(event.target);
+        });
 
 })(jQuery, application);
