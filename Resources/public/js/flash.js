@@ -55,18 +55,6 @@
                     });
                 }
             });
-        },
-
-        processFlash: function(target){
-            var flashes = $(target).find(app.PJAX_FLASH_SELECTOR);
-            if (flashes) {
-                var flashData = flashes.data(app.PJAX_FLASH);
-                if (flashData) {
-                    $(app.PJAX_FLASH_CONTAINER).html(flashData);
-                }
-                flashes.removeData(app.PJAX_FLASH);
-                flashes.removeAttr('data-' + app.PJAX_FLASH);
-            }
         }
     });
 
@@ -77,8 +65,18 @@
                 app.message('Error', app.MESSAGE_ERROR);
             }
         })
-        .on('pjax:complete', function(event){
-            app.processFlash(event.target);
+        .on('pjax:beforeReplace', function (event, contents, options) {
+            var tmp = $('<div></div>');
+            tmp.html(contents);
+            var flashes = $(app.PJAX_FLASH_SELECTOR, tmp);
+            if (flashes) {
+                var flashData = flashes.data(app.PJAX_FLASH);
+                if (flashData) {
+                    $(app.PJAX_FLASH_CONTAINER).html(flashData);
+                }
+                flashes.removeData(app.PJAX_FLASH);
+                flashes.removeAttr('data-' + app.PJAX_FLASH);
+            }
         });
 
 })(jQuery, application);
