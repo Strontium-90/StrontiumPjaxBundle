@@ -186,6 +186,9 @@
                     url: redirectedTo
                 }, generateStateParams(options));
                 window.history.pushState(event.state, event.state.title, event.state.url);
+                if (undefined !== app.processFlash){
+                    app.processFlash(event);
+                }
             }
 
             if (redirectTarget && redirectTarget != app.PJAX_MODAL_CONTAINER) {
