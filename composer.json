@@ -12,16 +12,6 @@
             "name": "Aleksey Bannov",
             "email": "a.s.bannov@gmail.com",
             "homepage": "https://github.com/Strontium-90"
-        },
-        {
-            "name": "Anton Tyutin",
-            "email": "anton@tyutin.ru",
-            "homepage": "https://github.com/AntonTyutin"
-        },
-        {
-            "name": "Tarasov Konstantin",
-            "email": "terrasoff@terrasoff.ru",
-            "homepage": "https://github.com/terrasoff"
         }
     ],
     "autoload": {
@@ -31,7 +21,7 @@
     },
     "require": {
         "php": ">=5.4",
-        "symfony/framework-bundle": "~2.6",
+        "symfony/framework-bundle": "~3.0",
         "symfony/twig-bundle": "~2.3"
     },
     "require-dev": {
@@ -44,7 +34,7 @@
     "scripts": {},
     "extra": {
         "branch-alias": {
-            "dev-master": "0.3-dev"
+            "dev-master": "0.4-dev"
         }
     }
 }
