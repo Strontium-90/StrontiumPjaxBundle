@@ -65,8 +65,10 @@
                 app.message('Error', app.MESSAGE_ERROR);
             }
         })
-        .on('pjax:complete', function (event, content, status, options) {
-            var flashes = $(event.target).find(app.PJAX_FLASH_SELECTOR);
+        .on('pjax:beforeReplace', function (event, contents, options) {
+            var tmp = $('<div></div>');
+            tmp.html(contents);
+            var flashes = $(app.PJAX_FLASH_SELECTOR, tmp);
             if (flashes) {
                 var flashData = flashes.data(app.PJAX_FLASH);
                 if (flashData) {

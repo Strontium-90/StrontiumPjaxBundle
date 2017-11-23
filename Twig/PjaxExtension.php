@@ -2,6 +2,7 @@
 namespace Strontium\PjaxBundle\Twig;
 
 use Strontium\PjaxBundle\Helper\PjaxHelperInterface;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -16,17 +17,7 @@ class PjaxExtension extends \Twig_Extension
     /**
      * @var array
      */
-    protected $layouts = [];
-
-    /**
-     * @var array
-     */
-    protected $frames = [];
-
-    /**
-     * @var string
-     */
-    protected $defaultFrame;
+    protected $sections = [];
 
     /**
      * @var RequestStack
@@ -54,7 +45,7 @@ class PjaxExtension extends \Twig_Extension
             new \Twig_SimpleFunction('pjax_version', [$this, 'pjaxVersion'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('pjax_target', [$this, 'getPjaxTarget'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('pjax_layout', [$this, 'getLayout'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('pjax_frame', [$this, 'getFrame'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('pjax_base', [$this, 'getBase'], ['is_safe' => ['html']]),
         );
     }
 
@@ -69,75 +60,54 @@ class PjaxExtension extends \Twig_Extension
     }
 
     /**
-     * @param string $frame
-     * @return mixed
+     * @return string
      */
-    public function getFrame($frame = null)
+    public function getLayout($section = 'default', $layout = null)
     {
+        $sectionConfig = $this->getSectionConfig($section);
         $request = $this->requestStack->getCurrentRequest();
 
-        if (null !== $frame) {
-            return $this->frames[$frame];
+        if (null !== $layout) {
+            return $sectionConfig['layouts'][$layout];
         }
         if ($this->pjax->isPjaxRequest($request)) {
             $target = $this->pjax->getTarget($request);
-            if (isset($this->frames[$target])) {
-                return $this->frames[$target];
+            if (isset($sectionConfig['layouts'][$target])) {
+                return $sectionConfig['layouts'][$target];
             } else {
-                return $this->frames[$this->defaultFrame];
+                return $sectionConfig['layouts'][$sectionConfig['default_layout']];
             }
         }
 
-        return $this->frames[$this->defaultFrame];
+        return $sectionConfig['layouts'][$sectionConfig['default_layout']];
     }
 
     /**
+     * @param string $section
+     *
      * @return string
      */
-    public function getLayout($layout = 'base')
+    public function getBase($section = 'default')
     {
+        $sectionConfig = $this->getSectionConfig($section);
         $request = $this->requestStack->getCurrentRequest();
         if ((null !== $request && $this->pjax->isPjaxRequest($request))
             || null !== $this->requestStack->getParentRequest()
         ) {
-            return $this->layouts['pjax'];
+            return $sectionConfig['pjax_template'];
         }
 
-        return $this->layouts[$layout];
+        return $sectionConfig['base_template'];
     }
 
     /**
-     * @param array $frames
+     * @param array $sections
      *
      * @return $this
      */
-    public function setFrames(array $frames)
+    public function setSections(array $sections)
     {
-        $this->frames = $frames;
-
-        return $this;
-    }
-
-    /**
-     * @param array $layouts
-     *
-     * @return $this
-     */
-    public function setLayouts(array $layouts)
-    {
-        $this->layouts = $layouts;
-
-        return $this;
-    }
-
-    /**
-     * @param string $defaultFrame
-     *
-     * @return $this
-     */
-    public function setDefaultFrame($defaultFrame)
-    {
-        $this->defaultFrame = $defaultFrame;
+        $this->sections = $sections;
 
         return $this;
     }
@@ -228,5 +198,20 @@ class PjaxExtension extends \Twig_Extension
     public function getName()
     {
         return 'pjax_extension';
+    }
+
+    /**
+     * @param string $section
+     *
+     * @return array
+     */
+    protected function getSectionConfig($section)
+    {
+        if (!isset($this->sections[$section])) {
+            throw new InvalidConfigurationException(sprintf('Section "%s" does not configured', $section));
+        }
+        $sectionConfig = $this->sections[$section];
+
+        return $sectionConfig;
     }
 }
